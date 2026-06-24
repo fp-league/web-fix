@@ -2169,5 +2169,36 @@ function toast(msg,isError=false){
 // ════════════════════════════════════════════════
 showGate();
 </script>
+
+<!-- GIVE CREDITS MODAL -->
+<div class="modal-overlay" id="modal-credits">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Give Credits</div>
+      <button class="modal-close" onclick="closeModal('modal-credits')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="credits-username">
+      <div style="margin-bottom:14px;font-size:13px;color:var(--sub)">Giving credits to: <strong id="credits-username-display" style="color:white"></strong></div>
+      <div style="margin-bottom:14px;font-size:13px;color:var(--sub)">Current balance: <strong id="credits-current" style="color:#FFD700"></strong></div>
+      <div class="form-group">
+        <label class="form-label">Amount to Give</label>
+        <input class="form-input" id="credits-amount" type="number" min="1" value="100" placeholder="e.g. 500">
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('credits-amount').value=60">60 (Standard)</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('credits-amount').value=250">250 (Premium)</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('credits-amount').value=500">500</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('credits-amount').value=900">900 (Elite)</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('credits-amount').value=1000">1000</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-credits')">Cancel</button>
+      <button class="btn btn-success" onclick="confirmGiveCredits()">Give Credits</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
