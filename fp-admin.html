@@ -1,0 +1,2166 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FP League — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<!-- ═══════════════════════════════════════════════════
+     JSONBIN CONFIG — same values as fp-league.html
+     ═══════════════════════════════════════════════════ -->
+<script>
+  const JSONBIN_ID  = "6a1ac3b221f9ee59d29d6a40";
+  const FANTASY_BIN_ID = "6a272898f5f4af5e29cda5a6";
+  const FANTASY_ENABLED = !FANTASY_BIN_ID.includes('PASTE');
+  const JSONBIN_KEY = "$2a$10$UawimQGX4UsFvqUS04uS9uK2ygBMaVKK8e4yf.sXdCVWQFseG8V2u";
+  const ADMIN_PASSWORD = "FP2Rule";
+  const JSONBIN_ENABLED = !JSONBIN_ID.includes('PASTE');
+</script>
+<style>
+:root{
+  --red:#E8001D;--orange:#FF6B00;--yellow:#FFD700;--green:#00C853;
+  --blue:#0057FF;--purple:#8B00FF;--pink:#FF2D78;
+  --grey:#8A8A8A;--black:#030303;--dark:#0A0A0A;
+  --card:#0A0A0A;--card2:#111;--border:#1C1C1C;--text:#F0F0F0;--sub:#555;
+  --sidebar:210px;
+  --f1:'Orbitron',sans-serif;--body:'Rajdhani',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--body);background:var(--black);color:var(--text);display:flex;min-height:100vh;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#222;border-radius:0;}
+
+/* ═══ SIDEBAR ═══ */
+aside{width:var(--sidebar);flex-shrink:0;background:#050505;border-right:1px solid #141414;display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:50;overflow-y:auto;}
+aside::before{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--red),var(--orange),transparent);}
+.sb-logo{padding:16px 16px 16px 20px;border-bottom:1px solid #141414;display:flex;align-items:center;gap:10px;}
+.sb-badge{width:32px;height:32px;background:var(--red);clip-path:polygon(0 0,80% 0,100% 100%,20% 100%);display:flex;align-items:center;justify-content:center;font-family:var(--f1);font-weight:900;font-size:11px;color:white;box-shadow:0 0 12px rgba(232,0,29,.3);}
+.sb-title{font-family:var(--f1);font-size:12px;font-weight:900;letter-spacing:3px;color:white;}
+.sb-title span{color:var(--red);}
+.sb-sub{font-family:var(--f1);font-size:7px;color:var(--sub);letter-spacing:3px;text-transform:uppercase;margin-top:2px;}
+nav.sb{flex:1;padding:8px 0;}
+.sb-section{font-family:var(--f1);font-size:7px;letter-spacing:3px;text-transform:uppercase;color:#333;padding:14px 16px 5px 20px;font-weight:400;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 16px 9px 20px;color:var(--sub);font-family:var(--body);font-size:13px;font-weight:500;cursor:pointer;border-left:2px solid transparent;transition:all .15s;}
+.sb-link:hover{color:var(--text);background:rgba(255,255,255,.02);}
+.sb-link.active{color:white;border-left-color:var(--red);background:rgba(232,0,29,.06);}
+.sb-link .icon{font-size:14px;width:18px;text-align:center;}
+.sb-footer{padding:12px 16px;border-top:1px solid #141414;}
+.save-btn{width:100%;padding:9px;background:var(--red);border:none;color:white;font-family:var(--f1);font-size:9px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:opacity .2s;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);box-shadow:0 0 12px rgba(232,0,29,.2);}
+.save-btn:hover{opacity:.85;}
+.save-status{font-family:var(--f1);font-size:8px;color:var(--sub);text-align:center;margin-top:6px;letter-spacing:1px;}
+
+/* ═══ MAIN ═══ */
+main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;}
+.topbar{height:52px;background:#050505;border-bottom:1px solid #141414;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:40;}
+.topbar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--orange),transparent);}
+.topbar-title{font-family:var(--f1);font-size:14px;font-weight:900;letter-spacing:3px;text-transform:uppercase;}
+.topbar-title span{color:var(--red);}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.div-pill{padding:5px 14px;font-family:var(--f1);font-size:9px;font-weight:700;letter-spacing:2px;cursor:pointer;border:1px solid #1c1c1c;color:var(--sub);transition:all .2s;background:transparent;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);}
+.div-pill.fp1.active{background:var(--red);border-color:var(--red);color:white;}
+.div-pill.fp2.active{background:var(--blue);border-color:var(--blue);color:white;}
+.top-btn{padding:5px 14px;background:#0D0D0D;border:1px solid #1c1c1c;color:var(--text);font-family:var(--f1);font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;}
+.top-btn:hover{border-color:#333;}
+
+/* ═══ PAGES ═══ */
+.page{display:none;padding:28px;flex:1;}
+.page.active{display:block;}
+
+/* ═══ CARDS ═══ */
+.card{background:var(--card);border:1px solid #141414;overflow:hidden;margin-bottom:16px;}
+.card-header{padding:12px 20px;border-bottom:1px solid #141414;display:flex;align-items:center;justify-content:space-between;background:#080808;}
+.card-title{font-family:var(--f1);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--sub);}
+.card-body{padding:20px;}
+
+/* ═══ GRID ═══ */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+/* ═══ STAT CARDS ═══ */
+.stat-card{background:#070707;border:1px solid #141414;border-top:2px solid var(--red);padding:20px;}
+.stat-card .val{font-family:var(--f1);font-size:32px;font-weight:900;}
+.stat-card .lbl{font-family:var(--f1);font-size:8px;color:var(--sub);letter-spacing:3px;text-transform:uppercase;margin-top:6px;}
+
+/* ═══ DATA TABLE ═══ */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{text-align:left;font-family:var(--f1);font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--sub);padding:10px 14px;border-bottom:1px solid #141414;font-weight:400;}
+.data-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid #0f0f0f;}
+.data-table tbody tr:hover{background:rgba(232,0,29,.02);}
+.data-table tbody tr:last-child td{border-bottom:none;}
+
+/* ═══ FORMS ═══ */
+.form-group{margin-bottom:14px;}
+.form-label{font-family:var(--f1);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--sub);font-weight:400;margin-bottom:6px;display:block;}
+.form-input,.form-select,.form-textarea{width:100%;background:#0D0D0D;border:1px solid #1c1c1c;color:var(--text);font-size:13px;padding:9px 12px;outline:none;font-family:var(--body);transition:border-color .2s;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--red);box-shadow:0 0 8px rgba(232,0,29,.1);}
+.form-select option{background:#0D0D0D;}
+.form-textarea{resize:vertical;min-height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+/* ═══ BUTTONS ═══ */
+.btn{padding:8px 18px;font-family:var(--f1);font-size:9px;font-weight:700;letter-spacing:2px;cursor:pointer;border:none;transition:all .2s;text-transform:uppercase;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);}
+.btn-primary{background:var(--red);color:white;}
+.btn-primary:hover{opacity:.85;}
+.btn-secondary{background:#111;border:1px solid #1c1c1c;color:var(--text);}
+.btn-secondary:hover{border-color:#333;}
+.btn-danger{background:rgba(232,0,29,.12);border:1px solid rgba(232,0,29,.2);color:var(--red);}
+.btn-danger:hover{background:rgba(232,0,29,.2);}
+.btn-success{background:rgba(0,200,83,.12);border:1px solid rgba(0,200,83,.2);color:var(--green);}
+.btn-success:hover{background:rgba(0,200,83,.2);}
+.btn-sm{padding:4px 12px;font-size:8px;}
+.btn-icon{padding:5px 9px;}
+
+/* ═══ MODAL ═══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:#070707;border:1px solid #1c1c1c;border-top:2px solid var(--red);width:540px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+.modal-header{padding:16px 22px;border-bottom:1px solid #141414;display:flex;align-items:center;justify-content:space-between;background:#0A0A0A;}
+.modal-title{font-family:var(--f1);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.modal-close{background:none;border:none;color:var(--sub);font-size:20px;cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;transition:color .2s;}
+.modal-close:hover{color:white;}
+.modal-body{padding:22px;}
+.modal-footer{padding:14px 22px;border-top:1px solid #141414;display:flex;justify-content:flex-end;gap:8px;background:#080808;}
+
+/* ═══ BADGE ═══ */
+.badge{display:inline-block;padding:2px 10px;font-family:var(--f1);font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%);}
+.badge-red{background:rgba(232,0,29,.12);color:var(--red);}
+.badge-blue{background:rgba(0,87,255,.12);color:var(--blue);}
+.badge-green{background:rgba(0,200,83,.12);color:var(--green);}
+.badge-grey{background:rgba(138,138,138,.12);color:var(--grey);}
+.badge-yellow{background:rgba(255,215,0,.12);color:var(--yellow);}
+
+/* ═══ COLOR SWATCH ═══ */
+.color-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.color-swatch{width:28px;height:28px;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;flex-shrink:0;clip-path:polygon(0 0,80% 0,100% 100%,20% 100%);}
+.color-swatch:hover{transform:scale(1.15);}
+.color-swatch.selected{border-color:white;}
+.color-preview{width:28px;height:28px;border:1px solid var(--border);}
+
+/* ═══ RESULTS ENTRY ═══ */
+.results-entry{display:flex;flex-direction:column;gap:6px;}
+.pos-row{
+  display:grid;grid-template-columns:48px 1fr 110px 60px 60px;gap:10px;align-items:center;
+  background:#0D0D0D;padding:10px 14px;border:1px solid #161616;border-left:2px solid #222;
+}
+.pos-badge{
+  width:36px;height:36px;clip-path:polygon(0 0,80% 0,100% 100%,20% 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--f1);font-size:13px;font-weight:900;flex-shrink:0;
+}
+.pb-1{background:rgba(255,215,0,.15);color:var(--yellow);}
+.pb-2{background:rgba(192,192,192,.15);color:#C0C0C0;}
+.pb-3{background:rgba(205,127,50,.15);color:#CD7F32;}
+.pb-n{background:rgba(255,255,255,.04);color:var(--sub);}
+.pts-display{
+  background:#0A0A0A;border:1px solid #161616;
+  padding:6px 10px;font-family:var(--f1);font-size:13px;font-weight:900;text-align:center;
+  color:var(--yellow);
+}
+.fl-check{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--sub);cursor:pointer;}
+.fl-check input{accent-color:var(--purple);}
+.dnf-check{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--sub);cursor:pointer;}
+.dnf-check input{accent-color:var(--red);}
+.pos-row.is-dnf{border-left-color:var(--red);opacity:.75;}
+.pos-row.is-dnf .pts-display{color:var(--red);}
+
+/* ═══ CALENDAR ═══ */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-month{font-family:var(--f1);font-size:16px;font-weight:900;letter-spacing:2px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-day-header{text-align:center;font-family:var(--f1);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--sub);padding:8px 0;}
+.cal-day{min-height:80px;background:#0A0A0A;padding:8px;border:1px solid transparent;transition:background .15s;}
+.cal-day:hover{background:#111;border-color:#1c1c1c;}
+.cal-day.other-month{opacity:.25;}
+.cal-day.today{border-color:var(--red);box-shadow:inset 0 0 10px rgba(232,0,29,.05);}
+.cal-day.has-race{background:#0d0808;}
+.cal-day-num{font-family:var(--f1);font-size:11px;font-weight:700;color:var(--sub);}
+.cal-day.today .cal-day-num{color:var(--red);}
+.cal-race-chip{margin-top:4px;background:var(--red);padding:3px 6px;font-family:var(--f1);font-size:7px;font-weight:700;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;clip-path:polygon(3px 0,100% 0,calc(100% - 3px) 100%,0 100%);}
+.cal-race-chip.fp2-chip{background:var(--blue);}
+.cal-race-chip.done-chip{background:#333;}
+
+/* ═══ POINTS SYSTEM ═══ */
+.pts-config-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #0f0f0f;}
+.pts-config-row:last-child{border-bottom:none;}
+.pts-pos-lbl{font-family:var(--f1);font-size:12px;font-weight:900;width:40px;}
+
+/* ═══ IMPORT ZONE ═══ */
+.import-zone{border:1px dashed #222;padding:40px;text-align:center;cursor:pointer;transition:border-color .2s;}
+.import-zone:hover{border-color:#444;}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:24px;right:24px;background:#0A0A0A;border:1px solid #1c1c1c;border-left:3px solid var(--green);padding:12px 20px;font-family:var(--body);font-size:13px;font-weight:600;z-index:1000;transform:translateX(120%);transition:transform .3s ease;box-shadow:0 4px 20px rgba(0,0,0,.6);}
+.toast.show{transform:translateX(0);}
+.toast.error{border-left-color:var(--red);}
+@keyframes lrflash{0%,100%{background:transparent}50%{background:rgba(180,79,255,.22)}} .lr-flash td{animation:lrflash .8s ease;}
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="sb-logo">
+    <div class="sb-badge">FP</div>
+    <div><div class="sb-title"><span>FP</span> LEAGUE</div><div class="sb-sub">Admin Panel</div></div>
+  </div>
+  <nav class="sb">
+    <div class="sb-section">Overview</div>
+    <div class="sb-link active" onclick="goto('dashboard',this)"><span class="icon">📊</span> Dashboard</div>
+    <div class="sb-link" onclick="goto('calendar',this)"><span class="icon">📅</span> Calendar</div>
+    <div class="sb-section">League</div>
+    <div class="sb-link" onclick="goto('teams',this)"><span class="icon">🏎️</span> Teams</div>
+    <div class="sb-link" onclick="goto('drivers',this)"><span class="icon">👤</span> Drivers</div>
+    <div class="sb-link" onclick="goto('schedule',this)"><span class="icon">🗓️</span> Schedule</div>
+    <div class="sb-link" onclick="goto('results',this)"><span class="icon">🏁</span> Race Results</div>
+    <div class="sb-link" onclick="goto('standings',this)"><span class="icon">📈</span> Standings</div>
+    <div class="sb-section">Content</div>
+    <div class="sb-link" onclick="goto('transfers',this)"><span class="icon">🔄</span> Transfers</div>
+    <div class="sb-link" onclick="goto('news',this)"><span class="icon">📰</span> News</div>
+    <div class="sb-link" onclick="goto('penalties',this)"><span class="icon">⚠️</span> Penalties</div>
+    <div class="sb-link" onclick="goto('halloffame',this)"><span class="icon">🏆</span> Hall of Fame</div>
+    <div class="sb-link" onclick="goto('cards',this)"><span class="icon">🃏</span> Trading Cards</div>
+    <div class="sb-link" onclick="goto('fantasy',this)"><span class="icon">⚡</span> Fantasy</div>
+    <div class="sb-link" onclick="goto('liverace',this)"><span class="icon">🔴</span> Live Race</div>
+    <div class="sb-section">Settings</div>
+    <div class="sb-link" onclick="goto('settings',this)"><span class="icon">⚙️</span> Settings</div>
+    <div class="sb-link" onclick="goto('data',this)"><span class="icon">💾</span> Import / Export</div>
+  </nav>
+  <div class="sb-footer">
+    <button class="save-btn" onclick="saveAll()">💾 Save All</button>
+    <div class="save-status" id="save-status">Last saved: never</div>
+  </div>
+</aside>
+
+<main>
+<div class="topbar">
+  <div class="topbar-title" id="topbar-title"><span>FP</span> Admin</div>
+  <div class="topbar-right">
+    <div class="div-pill fp1 active" onclick="setDiv('fp1')">FP 1</div>
+    <div class="div-pill fp2" onclick="setDiv('fp2')">FP 2</div>
+    <button class="top-btn" onclick="exportJSON()">⬇ Export</button>
+    <a href="fp-league.html" target="_blank" class="top-btn">↗ View Site</a>
+  </div>
+</div>
+
+<div id="page-liverace" class="page" style="display:none">
+  <div class="card"><div class="card-title">Race Setup</div><div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end"><div><label>League</label><br><select id="lr-league" style="padding:8px;border-radius:6px;background:#1e1e1e;border:1px solid #333;color:#fff"><option value="fp1">FP1</option><option value="fp2">FP2</option></select></div><div><label>Round</label><br><input id="lr-round" type="number" value="1" min="1" style="width:70px;padding:8px;border-radius:6px;background:#1e1e1e;border:1px solid #333;color:#fff"></div><div style="flex:1;min-width:180px"><label>Race Name</label><br><input id="lr-name" type="text" placeholder="e.g. Bahrain GP" style="width:100%;box-sizing:border-box;padding:8px;border-radius:6px;background:#1e1e1e;border:1px solid #333;color:#fff"></div><div><label>Total Laps</label><br><input id="lr-laps" type="number" value="20" min="1" style="width:70px;padding:8px;border-radius:6px;background:#1e1e1e;border:1px solid #333;color:#fff"></div><button class="btn" onclick="lrLoadDrivers()">Load Drivers</button><button class="btn" id="lr-start-btn" onclick="lrStart()" style="display:none;background:#0a6f0a">Start Race</button></div></div>
+<div id="lr-status-bar" style="display:none;background:#111;border:1px solid #333;border-radius:8px;padding:12px;margin-bottom:12px"><div id="lr-flag-banner" style="text-align:center;font-size:1.2em;font-weight:bold;padding:6px;border-radius:6px;background:#0a6f0a;color:#fff;margin-bottom:8px">GREEN FLAG</div><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div>Elapsed: <strong id="lr-elapsed">0:00.000</strong></div><div>Leader Lap: <strong id="lr-leader-lap">0</strong> / <span id="lr-total-laps">0</span></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="lrFlag('sc')" style="background:#e6b800;color:#000">SC</button><button class="btn" onclick="lrFlag('vsc')" style="background:#e6b800;color:#000">VSC</button><button class="btn" onclick="lrFlag('red')" style="background:#cc0000">Red Flag</button><button class="btn" onclick="lrFlag(null)" style="background:#0a6f0a">Clear</button><button class="btn" onclick="lrEnd()" style="background:#555">End Race</button></div><div style="margin-top:6px;font-size:.82em"><span id="ocr-sync-ind" style="color:#555">⚫ OCR tracker off — run start-tracker.bat to auto-track laps</span></div></div></div>
+<div id="lr-timing-wrap" style="display:none"><div class="card-title" style="margin-bottom:8px">Live Timing</div><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9em"><thead><tr style="border-bottom:1px solid #333;text-align:left"><th style="padding:6px">Pos</th><th style="padding:6px">Driver</th><th style="padding:6px">Team</th><th style="padding:6px">Laps</th><th style="padding:6px">Last Lap</th><th style="padding:6px">Best</th><th style="padding:6px">Total</th><th style="padding:6px">Gap</th><th style="padding:6px">Status</th><th style="padding:6px">Actions</th></tr></thead><tbody id="lr-tbody"></tbody></table></div></div>
+<div id="lr-results-wrap" style="display:none"><div class="card" style="margin-top:12px"><div class="card-title">Race Results</div><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9em"><thead><tr style="border-bottom:1px solid #333;text-align:left"><th style="padding:6px">Pos</th><th style="padding:6px">Driver</th><th style="padding:6px">Team</th><th style="padding:6px">Pts</th></tr></thead><tbody id="lr-results-tbody"></tbody></table></div><div style="margin-top:12px"><label>Fastest Lap: </label><select id="lr-fl-select" style="padding:8px;border-radius:6px;background:#1e1e1e;border:1px solid #333;color:#fff"></select></div><button class="btn" onclick="lrSave()" style="margin-top:12px;background:#0a6f0a">Save to Database</button></div></div>
+</div>
+<script>
+let lr={active:false,ended:false,league:'fp1',round:1,name:'',totalLaps:20,startedAt:null,flag:null,drivers:[]};
+let lrTicker=null;let ocrSyncInterval=null;let lastOcrTs=0;let prevOcrPits={};function lrLapAuto(d){if(!d||d.dnf||d.finished)return;let t=Date.now()-lr.startedAt;let prevLts=d.es.map(function(v,j){return j===0?v:v-d.es[j-1];});let prevBest=prevLts.length?Math.min.apply(null,prevLts):null;d.es.push(t);d.laps++;let newLts=d.es.map(function(v,j){return j===0?v:v-d.es[j-1];});let newLap=newLts[newLts.length-1];d.newBest=(prevBest===null||newLap<prevBest);if(d.laps>=lr.totalLaps){d.finished=true;d.finishMs=t;}d.inPit=false;}async function ocrSyncTick(){if(!lr.active){stopOcrSync();return;}try{let res=await fetch("https://api.jsonbin.io/v3/b/"+JSONBIN_ID+"/latest",{headers:{"X-Master-Key":JSONBIN_KEY,"X-Bin-Meta":"false"}});if(!res.ok)return;let freshDb=await res.json();let ocr=freshDb.ocrLaps;if(!ocr||ocr.ts<=lastOcrTs)return;lastOcrTs=ocr.ts;let oLaps=ocr.laps||{},oPits=ocr.pits||{};let changed=false;lr.drivers.forEach(function(d){if(d.dnf||d.finished)return;let oL=oLaps[d.name];if(oL!==undefined&&oL>d.laps){let toAdd=Math.min(oL-d.laps,5);for(let i=0;i<toAdd;i++)lrLapAuto(d);changed=true;}let oP=oPits[d.name];let prevP=prevOcrPits[d.name]||0;if(oP!==undefined&&oP>prevP){d.inPit=true;prevOcrPits[d.name]=oP;changed=true;}});if(changed){lrRender();lrSync();}let ind=document.getElementById("ocr-sync-ind");if(ind){ind.textContent="🟢 AUTO SYNC active";ind.style.color="#0f0";}}catch(e){let ind=document.getElementById("ocr-sync-ind");if(ind){ind.textContent="🟡 SYNC error";ind.style.color="#f80";}}}function startOcrSync(){lastOcrTs=0;prevOcrPits={};if(ocrSyncInterval)clearInterval(ocrSyncInterval);ocrSyncInterval=setInterval(ocrSyncTick,3000);let ind=document.getElementById("ocr-sync-ind");if(ind){ind.textContent="⚪ AUTO SYNC waiting for tracker...";ind.style.color="#888";}}function stopOcrSync(){if(ocrSyncInterval){clearInterval(ocrSyncInterval);ocrSyncInterval=null;}let ind=document.getElementById("ocr-sync-ind");if(ind){ind.textContent="⚫ OCR tracker off";ind.style.color="#555";}}
+function lrFmt(ms){if(!ms&&ms!==0)return '--';let m=Math.floor(ms/60000),s=Math.floor((ms%60000)/1000),mm=ms%1000;return m+':'+(s<10?'0':'')+s+'.'+(mm<100?(mm<10?'00':'0'):'')+mm;}
+function lrSort(){lr.drivers.sort(function(a,b){if(a.finished&&!b.finished)return -1;if(!a.finished&&b.finished)return 1;if(a.finished&&b.finished)return a.finishMs-b.finishMs;if(a.dnf&&!b.dnf)return 1;if(!a.dnf&&b.dnf)return -1;if(b.laps!==a.laps)return b.laps-a.laps;let ae=a.es.reduce(function(s,v){return s+v;},0),be=b.es.reduce(function(s,v){return s+v;},0);return ae-be;});}
+function lrRender(){lrSort();let leader=lr.drivers.find(function(d){return !d.dnf&&!d.finished;})||lr.drivers[0];let e1=document.getElementById('lr-leader-lap'),e2=document.getElementById('lr-total-laps');if(e1)e1.textContent=leader?leader.laps:0;if(e2)e2.textContent=lr.totalLaps;let rows='';let globalBest=null;lr.drivers.forEach(function(d){let ltsG=d.es.map(function(v,j){return j===0?v:v-d.es[j-1];});let bG=ltsG.length?Math.min.apply(null,ltsG):null;if(bG!==null&&(globalBest===null||bG<globalBest))globalBest=bG;});lr.drivers.forEach(function(d,i){let lts=d.es.map(function(v,j){return j===0?v:v-d.es[j-1];});let last=lts.length?lts[lts.length-1]:null,best=lts.length?Math.min.apply(null,lts):null,tot=d.es.length?d.es[d.es.length-1]:null,ldr=leader&&leader.es.length?leader.es[leader.es.length-1]:null,gap=(!d.finished&&!d.dnf&&tot&&ldr&&i>0)?(tot-ldr):null;let isFl=best!==null&&best===globalBest;let flashCls=d.newBest?' class="lr-flash"':'';if(d.newBest)d.newBest=false;let st=d.finished?'<span style="color:#0f0">FIN</span>':d.dnf?'<span style="color:#f44">DNF</span>':d.inPit?'<span style="color:#ff0">PIT</span>':'';let acts=(!d.finished&&!d.dnf?'<button onclick="lrLap('  +i+')" style="margin-right:6px;padding:9px 22px;border-radius:6px;background:#1a6f1a;border:none;color:#fff;cursor:pointer;font-size:1em;font-weight:700">+Lap</button>':''  )+(!d.finished&&!d.dnf?'<button onclick="lrPit('  +i+')" style="margin-right:4px;padding:2px 8px;border-radius:4px;background:'+(d.inPit?'#555':'#6f6f00')+';border:none;color:#fff;cursor:pointer">PIT</button>':''  )+(!d.finished?'<button onclick="lrDNF('  +i+')" style="padding:2px 8px;border-radius:4px;background:'+(d.dnf?'#555':'#6f0000')+';border:none;color:#fff;cursor:pointer">'+(d.dnf?'Undo':'DNF')+'</button>':''  );rows+='<tr'+flashCls+' style="border-bottom:1px solid #222"><td style="padding:6px">'+( i+1)+'</td><td style="padding:6px"><span style="display:inline-block;width:4px;height:14px;background:'+d.tc+';border-radius:2px;margin-right:6px;vertical-align:middle"></span>'+d.name+'</td><td style="padding:6px;font-size:0.85em;color:#888">'+d.team+'</td><td style="padding:6px">'+d.laps+'/'+lr.totalLaps+'</td><td style="padding:6px">'+lrFmt(last)+'</td><td style="padding:6px'+(isFl?';color:#b44fff;font-weight:bold':'')+'">'+(isFl?'● ':'')+lrFmt(best)+'</td><td style="padding:6px">'+lrFmt(tot)+'</td><td style="padding:6px">'+(gap!==null?'+'+lrFmt(gap):(i===0?'&mdash;':''  ))+'</td><td style="padding:6px">'+st+'</td><td style="padding:6px;white-space:nowrap">'+acts+'</td></tr>';});let tb=document.getElementById('lr-tbody');if(tb)tb.innerHTML=rows;}
+async function lrLoadDrivers(){let league=document.getElementById('lr-league').value,round=parseInt(document.getElementById('lr-round').value)||1,name=document.getElementById('lr-name').value,totalLaps=parseInt(document.getElementById('lr-laps').value)||20;if(!DB){showToast('Database not loaded');return;}let data=DB[league];if(!data||!data.drivers||!data.drivers.length){showToast('No drivers for '+league.toUpperCase());return;}if(!name){let sc=data.schedule&&data.schedule.find(function(s){return s.round===round;});name=sc?sc.name:'Round '+round;document.getElementById('lr-name').value=name;}const tcMap={'Red Bull Racing':'#3671C6','Mercedes':'#27F4D2','Ferrari':'#E8001D','McLaren':'#FF8000','Aston Martin':'#358C75','Alpine':'#FF87BC','Williams':'#64C4FF','RB':'#6692FF','Haas':'#B6BABD','Kick Sauber':'#52E252'};let to=data.teams||[];lr={active:false,ended:false,league:league,round:round,name:name,totalLaps:totalLaps,startedAt:null,flag:null,drivers:data.drivers.map(function(d){let tn=typeof d.team==='number'?((to[d.team]&&to[d.team].name)||'Team '+(d.team+1)):d.team;return{name:d.name,team:tn,tc:tcMap[tn]||'#888',laps:0,es:[],inPit:false,dnf:false,finished:false,finishMs:null};})};document.getElementById('lr-start-btn').style.display='inline-block';['lr-timing-wrap','lr-status-bar','lr-results-wrap'].forEach(function(id){document.getElementById(id).style.display='none';});lrRender();document.getElementById('lr-timing-wrap').style.display='block';showToast('Loaded '+lr.drivers.length+' drivers — ready to start');}
+function lrStart(){lr.active=true;lr.startedAt=Date.now();document.getElementById('lr-start-btn').style.display='none';document.getElementById('lr-status-bar').style.display='block';lrTicker=setInterval(function(){document.getElementById('lr-elapsed').textContent=lrFmt(Date.now()-lr.startedAt);},100);lrSync();startOcrSync();lrRender();showToast('Race started!');}
+function lrLap(idx){let d=lr.drivers[idx];if(!d||d.dnf||d.finished)return;let t=Date.now()-lr.startedAt;let prevLts=d.es.map(function(v,j){return j===0?v:v-d.es[j-1];});let prevBest=prevLts.length?Math.min.apply(null,prevLts):null;d.es.push(t);d.laps++;let newLts=d.es.map(function(v,j){return j===0?v:v-d.es[j-1];});let newLap=newLts[newLts.length-1];d.newBest=(prevBest===null||newLap<prevBest);if(d.laps>=lr.totalLaps){d.finished=true;d.finishMs=t;}d.inPit=false;lrRender();lrSync();}
+function lrPit(idx){let d=lr.drivers[idx];if(!d||d.dnf||d.finished)return;d.inPit=!d.inPit;lrRender();}
+function lrDNF(idx){let d=lr.drivers[idx];if(!d||d.finished)return;d.dnf=!d.dnf;lrRender();lrSync();}
+function lrFlag(mode){lr.flag=mode;let b=document.getElementById('lr-flag-banner');if(mode==='sc'){b.style.background='#e6b800';b.style.color='#000';b.textContent='SAFETY CAR';}else if(mode==='vsc'){b.style.background='#e6b800';b.style.color='#000';b.textContent='VIRTUAL SC';}else if(mode==='red'){b.style.background='#cc0000';b.style.color='#fff';b.textContent='RED FLAG';}else{b.style.background='#0a6f0a';b.style.color='#fff';b.textContent='GREEN FLAG';}lrSync();}
+function lrEnd(){lr.drivers.forEach(function(d){if(!d.finished&&!d.dnf)d.dnf=true;});if(lrTicker){clearInterval(lrTicker);lrTicker=null;}lr.active=false;lr.ended=true;lrSort();lrRender();lrShowResults();stopOcrSync();lrSync();}
+function lrShowResults(){const PTS=[25,18,15,12,10,8,6,4,2,1];let fin=lr.drivers.filter(function(d){return d.finished;}),dnfs=lr.drivers.filter(function(d){return d.dnf;}),ord=fin.concat(dnfs);let rows='',fls=document.getElementById('lr-fl-select');fls.innerHTML='';let bMs=Infinity,bD='';fin.forEach(function(d){let lts=d.es.map(function(v,j){return j===0?v:v-d.es[j-1];});let b=lts.length?Math.min.apply(null,lts):Infinity;if(b<bMs){bMs=b;bD=d.name;}});ord.forEach(function(d,i){let pts=d.dnf?0:(PTS[i]||0);rows+='<tr style="border-bottom:1px solid #222"><td style="padding:6px">'+(i+1)+'</td><td style="padding:6px">'+d.name+'</td><td style="padding:6px;color:#888">'+d.team+'</td><td style="padding:6px">'+pts+(d.dnf?' (DNF)':'')+'</td></tr>';});document.getElementById('lr-results-tbody').innerHTML=rows;fin.forEach(function(d){let o=document.createElement('option');o.value=d.name;o.textContent=d.name;if(d.name===bD)o.selected=true;fls.appendChild(o);});document.getElementById('lr-results-wrap').style.display='block';}
+async function lrSave(){if(!DB)return;const PTS=[25,18,15,12,10,8,6,4,2,1];let flD=document.getElementById('lr-fl-select').value,fin=lr.drivers.filter(function(d){return d.finished;}),dnfs=lr.drivers.filter(function(d){return d.dnf;}),ord=fin.concat(dnfs);let entries=ord.map(function(d,i){let pts=d.dnf?0:(PTS[i]||0);if(!d.dnf&&d.name===flD)pts+=1;return{driver:d.name,pts:pts,dnf:d.dnf};});let fdb;try{let r=await fetch('https://api.jsonbin.io/v3/b/'+JSONBIN_ID+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY}});fdb=(await r.json()).record;}catch(e){showToast('DB fetch failed: '+e.message);return;}let ld=fdb[lr.league];ld.results=ld.results.filter(function(r){return r.round!==lr.round;});ld.results.push({round:lr.round,results:entries,fastestLap:flD});entries.forEach(function(e){let d=ld.drivers.find(function(d){return d.name===e.driver;});if(d)d.pts=(d.pts||0)+e.pts;});let tp={};ld.drivers.forEach(function(d){let tn=typeof d.team==='number'?((ld.teams[d.team]&&ld.teams[d.team].name)||'Team '+(d.team+1)):d.team;tp[tn]=(tp[tn]||0)+(d.pts||0);});ld.teams.forEach(function(t){if(tp[t.name]!==undefined)t.pts=tp[t.name];});let sc=ld.schedule.find(function(s){return s.round===lr.round;});if(sc){sc.status='completed';sc.winner=ord.length?ord[0].name:'';}fdb.liveRace={active:false,ended:true,league:lr.league,round:lr.round,name:lr.name};try{await fetch('https://api.jsonbin.io/v3/b/'+JSONBIN_ID,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},body:JSON.stringify(fdb)});DB=fdb;showToast('Race saved!');renderPage(currentPage);}catch(e){showToast('Save failed: '+e.message);}}
+async function lrSync(){if(typeof JSONBIN_ID==='undefined'||!DB)return;lrSort();let snap=lr.drivers.map(function(d,i){let lts=d.es.map(function(v,j){return j===0?v:v-d.es[j-1];});return{pos:i+1,name:d.name,team:d.team,teamColor:d.tc,laps:d.laps,totalLaps:lr.totalLaps,lastLapMs:lts.length?lts[lts.length-1]:null,bestLapMs:lts.length?Math.min.apply(null,lts):null,totalElapsedMs:d.es.length?d.es[d.es.length-1]:null,inPit:d.inPit,dnf:d.dnf,finished:d.finished};});DB.liveRace={active:lr.active,ended:lr.ended,league:lr.league,round:lr.round,name:lr.name,totalLaps:lr.totalLaps,startedAt:lr.startedAt,flag:lr.flag,lastUpdated:Date.now(),drivers:snap};try{await fetch('https://api.jsonbin.io/v3/b/'+JSONBIN_ID,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},body:JSON.stringify(DB)});}catch(e){console.warn('lrSync',e);}}
+function renderLiveRace(){document.querySelectorAll('.page').forEach(function(p){p.style.display='none';});document.getElementById('page-liverace').style.display='block';}
+</script>
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="grid-3" id="dash-stats" style="margin-bottom:20px"></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">TOP DRIVERS — <span id="dash-div-lbl" style="color:var(--red)">FP 1</span></div></div>
+      <table class="data-table" id="dash-drivers-tbl"></table>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">UPCOMING RACES</div></div>
+        <div class="card-body" id="dash-upcoming"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">CONSTRUCTOR STANDINGS</div></div>
+        <table class="data-table" id="dash-constructors-tbl"></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div class="page" id="page-calendar">
+  <div class="card">
+    <div class="card-body">
+      <div class="cal-nav">
+        <button class="btn btn-secondary" onclick="calPrev()">‹ Prev</button>
+        <div class="cal-month" id="cal-label"></div>
+        <button class="btn btn-secondary" onclick="calNext()">Next ›</button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-day-header">Sun</div><div class="cal-day-header">Mon</div>
+        <div class="cal-day-header">Tue</div><div class="cal-day-header">Wed</div>
+        <div class="cal-day-header">Thu</div><div class="cal-day-header">Fri</div>
+        <div class="cal-day-header">Sat</div>
+      </div>
+      <div class="cal-grid" id="cal-grid" style="margin-top:2px"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">ALL RACES</div>
+      <button class="btn btn-primary btn-sm" onclick="openAddRace()">+ Add Race</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Div</th><th>Rd</th><th>Race</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="cal-race-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TEAMS -->
+<div class="page" id="page-teams">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">TEAMS — <span id="teams-div-lbl" style="color:var(--red)">FP 1</span></div>
+      <button class="btn btn-primary btn-sm" onclick="openAddTeam()">+ Add Team</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Colour</th><th>Team Name</th><th>Pts</th><th>Wins</th><th>Drivers</th><th>Actions</th></tr></thead>
+      <tbody id="teams-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- DRIVERS -->
+<div class="page" id="page-drivers">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">DRIVERS — <span id="drivers-div-lbl" style="color:var(--red)">FP 1</span></div>
+      <button class="btn btn-primary btn-sm" onclick="openAddDriver()">+ Add Driver</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Pos</th><th>Driver</th><th>Code</th><th>Team</th><th>Pts</th><th>Wins</th><th>£ Value</th><th>Actions</th></tr></thead>
+      <tbody id="drivers-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="page" id="page-schedule">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">SCHEDULE — <span id="schedule-div-lbl" style="color:var(--red)">FP 1</span></div>
+      <button class="btn btn-primary btn-sm" onclick="openAddRace()">+ Add Race</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Round</th><th>Race Name</th><th>Date</th><th>Status</th><th>Winner</th><th>Actions</th></tr></thead>
+      <tbody id="schedule-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- RESULTS — MAIN FEATURE -->
+<div class="page" id="page-results">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Division</label>
+          <select class="form-select" id="res-div" onchange="loadResRaces()">
+            <option value="fp1">FP 1</option>
+            <option value="fp2">FP 2</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Race</label>
+          <select class="form-select" id="res-race" onchange="loadResForm()"></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title" id="res-title">Select a race above</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary btn-sm" onclick="autoFillOrder()">↕ Reset Order</button>
+        <button class="btn btn-success btn-sm" onclick="saveResults()">✓ Save Results &amp; Points</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--yellow)">
+        <strong>How it works:</strong> Set each driver's finishing position using the dropdowns. Points are assigned automatically using the F1 scoring system. Hit "Save Results &amp; Points" to update the championship standings.
+      </div>
+      <div style="display:grid;grid-template-columns:48px 1fr 110px 60px;gap:10px;padding:6px 14px;margin-bottom:4px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sub)">Pos</div>
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sub)">Driver</div>
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sub)">Pts</div>
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sub)">FL</div>
+      </div>
+      <div class="results-entry" id="res-rows">
+        <div style="color:var(--sub);font-size:13px">Select a division and race above.</div>
+      </div>
+      <div style="margin-top:16px">
+        <div class="form-group">
+          <label class="form-label">Race Winner Name (for display)</label>
+          <input class="form-input" id="res-winner-display" placeholder="Auto-filled from P1 driver">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Winning Time</label>
+            <input class="form-input" id="res-time" placeholder="e.g. 1:12:34">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Race Status</label>
+            <select class="form-select" id="res-status">
+              <option value="upcoming">Upcoming</option>
+              <option value="next">Next Race</option>
+              <option value="completed" selected>Completed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Past results summary -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">PAST RESULTS SUMMARY</div></div>
+    <table class="data-table">
+      <thead><tr><th>Round</th><th>Race</th><th>Winner</th><th>Date</th><th>Entries</th></tr></thead>
+      <tbody id="past-results-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- STANDINGS -->
+<div class="page" id="page-standings">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">DRIVER STANDINGS — <span id="standings-div-lbl" style="color:var(--red)">FP 1</span></div>
+      <button class="btn btn-secondary btn-sm" onclick="recalcStandings()">⟳ Recalculate from Results</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Pos</th><th>Driver</th><th>Team</th><th>Wins</th><th>Pts</th><th>+/-</th></tr></thead>
+      <tbody id="standings-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">CONSTRUCTOR STANDINGS</div></div>
+    <table class="data-table">
+      <thead><tr><th>Pos</th><th>Team</th><th>Drivers</th><th>Wins</th><th>Pts</th></tr></thead>
+      <tbody id="constructor-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TRANSFERS -->
+<div class="page" id="page-transfers">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">TRANSFERS — <span id="transfers-div-lbl" style="color:var(--red)">FP 1</span></div>
+      <button class="btn btn-primary btn-sm" onclick="openAddTransfer()">+ Add Transfer</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Driver</th><th>From</th><th>To</th><th>Date</th><th>Note</th><th>Actions</th></tr></thead>
+      <tbody id="transfers-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- NEWS -->
+<div class="page" id="page-news">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">NEWS — <span id="news-div-lbl" style="color:var(--red)">FP 1</span></div>
+      <button class="btn btn-primary btn-sm" onclick="openAddNews()">+ Add Article</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Tag</th><th>Title</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody id="news-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PENALTIES -->
+<div class="page" id="page-penalties">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">⚠️ PENALTIES — <span id="penalties-div-lbl" style="color:var(--red)">FP 1</span></div>
+      <button class="btn btn-primary btn-sm" onclick="openAddPenalty()">+ Add Penalty</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Type</th><th>Driver</th><th>Race</th><th>Detail</th><th>Reason</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody id="penalties-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TRADING CARDS -->
+<div class="page" id="page-cards">
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card" style="margin:0">
+      <div class="card-header">
+        <div class="card-title">🃏 DRIVER CARDS — <span id="cards-div-lbl" style="color:var(--red)">FP 1</span></div>
+        <button class="btn btn-primary btn-sm" onclick="openAddCard()">+ Add Card</button>
+      </div>
+      <div class="card-body" style="padding:12px">
+        <div style="font-size:12px;color:var(--sub);margin-bottom:12px">Cards are generated automatically from driver data. You can override the photo URL and add a custom tagline per driver here.</div>
+        <table class="data-table">
+          <thead><tr><th>Driver</th><th>Div</th><th>Rarity</th><th>Photo</th><th>Tagline</th><th>Actions</th></tr></thead>
+          <tbody id="cards-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-header"><div class="card-title">CARD PREVIEW</div></div>
+      <div class="card-body" id="card-preview-body" style="display:flex;justify-content:center;align-items:flex-start;min-height:200px;padding:20px">
+        <div style="color:var(--sub);font-size:13px;align-self:center">Select a driver to preview their card.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">PACK SETTINGS</div>
+    </div>
+    <div class="card-body">
+      <div style="font-size:12px;color:var(--sub);margin-bottom:16px">Configure rarity thresholds. Positions are ranked within each division.</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">⭐ Legendary — Position</label>
+          <select class="form-select" id="rarity-legendary">
+            <option value="1" selected>P1 only</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">💜 Epic — Positions</label>
+          <select class="form-select" id="rarity-epic">
+            <option value="3" selected>P2–P3</option>
+            <option value="5">P2–P5</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">🔵 Rare — Positions</label>
+          <select class="form-select" id="rarity-rare">
+            <option value="6" selected>P4–P6</option>
+            <option value="8">P4–P8</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-secondary btn-sm" onclick="toast('Rarity settings are applied live on the public site.')">ℹ Current settings active</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FANTASY -->
+<div class="page" id="page-fantasy">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">⚡ FANTASY LEAGUE — ACCOUNTS</div>
+      <button class="btn btn-secondary btn-sm" onclick="adminLoadFantasy()">↻ Refresh</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Username</th><th>FP1 Pick</th><th>FP2 Pick</th><th>Fantasy Pts</th><th>Credits</th><th>Cards</th><th>Actions</th></tr></thead>
+      <tbody id="fantasy-admin-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- HALL OF FAME -->
+<div class="page" id="page-halloffame">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🏆 HALL OF FAME</div>
+      <button class="btn btn-primary btn-sm" onclick="openAddHof()">+ Add Entry</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Driver</th><th>Titles</th><th>Wins</th><th>Poles</th><th>Podiums</th><th>Seasons</th><th>Career Pts</th><th>Actions</th></tr></thead>
+      <tbody id="hof-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">LEAGUE SETTINGS</div></div>
+      <div class="card-body">
+        <div class="form-group"><label class="form-label">League Name</label><input class="form-input" id="s-name" placeholder="FP League"></div>
+        <div class="form-group"><label class="form-label">Season</label><input class="form-input" id="s-season" type="number" value="1"></div>
+        <div class="form-group"><label class="form-label">FP1 Division Name</label><input class="form-input" id="s-fp1" placeholder="FP 1"></div>
+        <div class="form-group"><label class="form-label">FP2 Division Name</label><input class="form-input" id="s-fp2" placeholder="FP 2"></div>
+        <div class="form-group"><label class="form-label">Total Rounds</label><input class="form-input" id="s-rounds" type="number" value="16"></div>
+        <div class="form-group"><label class="form-label">Fantasy Budget (£m) <span style="font-size:10px;color:var(--sub);font-weight:400">— total budget each player has to spend on their two picks</span></label><input class="form-input" id="s-fantasy-budget" type="number" value="25" min="1"></div>
+        <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">F1 POINTS SYSTEM</div></div>
+      <div class="card-body">
+        <p style="font-size:12px;color:var(--sub);margin-bottom:16px">Points awarded per finishing position. Fastest Lap gives +1 to a driver in the top 10.</p>
+        <div id="pts-config"></div>
+        <button class="btn btn-primary" style="margin-top:16px" onclick="savePoints()">Save Points System</button>
+      </div>
+    </div>
+  </div>
+  <!-- END OF SEASON -->
+  <div class="card" style="margin-top:16px;border-top:3px solid var(--yellow);background:linear-gradient(135deg,#0d0b00 0%,#080700 100%);">
+    <div class="card-header" style="border-bottom-color:#1e1a00">
+      <div>
+        <div class="card-title" style="color:var(--yellow)">🏁 END OF SEASON</div>
+        <div style="font-size:11px;color:rgba(255,215,0,.45);margin-top:3px;font-family:var(--body)">Capture champions, broadcast countdown to all connected devices, then reset all standings to zero.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="eos-status" style="font-family:var(--f1);font-size:10px;color:var(--sub);letter-spacing:2px;min-height:16px;margin-bottom:14px"></div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+        <button id="eos-btn" onclick="triggerEndOfSeason()" style="background:linear-gradient(135deg,#8B6914,#C8970C);color:#000;font-weight:900;font-size:10px;letter-spacing:2px;padding:11px 26px;border:none;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);cursor:pointer;box-shadow:0 0 20px rgba(255,215,0,.18);font-family:var(--f1);">🏆 NEW SEASON</button>
+        <span style="font-size:12px;color:var(--sub);max-width:420px">Captures current leaders as champions. All viewers on the site will see a 15-second countdown before stats are wiped.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DATA -->
+<div class="page" id="page-data">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">EXPORT DATABASE</div></div>
+      <div class="card-body">
+        <p style="font-size:13px;color:var(--sub);margin-bottom:16px">Download the complete league database as JSON.</p>
+        <button class="btn btn-primary" onclick="exportJSON()">⬇ Download fp-database.json</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">IMPORT DATABASE</div></div>
+      <div class="card-body">
+        <p style="font-size:13px;color:var(--sub);margin-bottom:16px">Import a previously exported JSON to restore all data.</p>
+        <div class="import-zone" onclick="document.getElementById('import-file').click()">
+          <div style="font-size:32px;margin-bottom:8px">📂</div>
+          <div style="font-size:14px;font-weight:700">Click to import JSON</div>
+          <div style="font-size:12px;color:var(--sub);margin-top:4px">fp-database.json</div>
+        </div>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(this)">
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">RAW DATABASE</div></div>
+    <div class="card-body">
+      <textarea class="form-textarea" id="raw-preview" style="min-height:300px;font-family:monospace;font-size:11px" readonly></textarea>
+      <button class="btn btn-secondary" style="margin-top:10px" onclick="updateRaw()">↻ Refresh</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ── MODALS ── -->
+
+<!-- TEAM -->
+<div class="modal-overlay" id="modal-team">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="team-modal-title">Add Team</div><button class="modal-close" onclick="closeModal('modal-team')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="team-idx" value="-1">
+      <div class="form-group"><label class="form-label">Team Name</label><input class="form-input" id="team-name" placeholder="e.g. Storm Racing"></div>
+      <div class="form-group">
+        <label class="form-label">Team Colour</label>
+        <div class="color-row" id="team-swatches"></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+          <div class="color-preview" id="team-color-preview"></div>
+          <input class="form-input" id="team-color" value="#E8001D" oninput="syncColor('team')">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Points</label><input class="form-input" id="team-pts" type="number" value="0"></div>
+        <div class="form-group"><label class="form-label">Wins</label><input class="form-input" id="team-wins" type="number" value="0"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-team')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTeam()">Save Team</button>
+    </div>
+  </div>
+</div>
+
+<!-- DRIVER -->
+<div class="modal-overlay" id="modal-driver">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="driver-modal-title">Add Driver</div><button class="modal-close" onclick="closeModal('modal-driver')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="driver-idx" value="-1">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="driver-name" placeholder="e.g. Storm Racer"></div>
+        <div class="form-group"><label class="form-label">3-Letter Code</label><input class="form-input" id="driver-code" placeholder="STR" maxlength="3" style="text-transform:uppercase"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Team</label><select class="form-select" id="driver-team"></select></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Points</label><input class="form-input" id="driver-pts" type="number" value="0"></div>
+        <div class="form-group"><label class="form-label">Wins</label><input class="form-input" id="driver-wins" type="number" value="0"></div>
+        <div class="form-group"><label class="form-label">Poles</label><input class="form-input" id="driver-poles" type="number" value="0"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Fantasy Value (£m) <span style="font-size:10px;color:var(--sub);font-weight:400">— cost players spend from their budget to pick this driver</span></label><input class="form-input" id="driver-fantasy-value" type="number" min="1" max="30" value="10"></div>
+      <div class="form-group"><label class="form-label">Photo URL — upload image to GitHub repo /images/ folder, then use: https://benjaminjameswestley-code.github.io/FP-League/images/filename.png</label><input class="form-input" id="driver-photo" placeholder="https://benjaminjameswestley-code.github.io/FP-League/images/driver.png"></div>
+      <div class="form-group">
+        <label class="form-label">Standing Change</label>
+        <select class="form-select" id="driver-change">
+          <option value="eq">No Change (—)</option>
+          <option value="up">Gained (▲)</option>
+          <option value="dn">Lost (▼)</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-driver')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveDriver()">Save Driver</button>
+    </div>
+  </div>
+</div>
+
+<!-- RACE -->
+<div class="modal-overlay" id="modal-race">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="race-modal-title">Add Race</div><button class="modal-close" onclick="closeModal('modal-race')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="race-idx" value="-1">
+      <input type="hidden" id="race-div-modal" value="fp1">
+      <div class="form-group"><label class="form-label">Division</label>
+        <select class="form-select" id="race-div-sel"><option value="fp1">FP 1</option><option value="fp2">FP 2</option></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Round</label><input class="form-input" id="race-round" type="number" value="1"></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select class="form-select" id="race-status">
+            <option value="upcoming">Upcoming</option>
+            <option value="next">Next Race</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Race Name</label><input class="form-input" id="race-name" placeholder="e.g. Storm Valley GP"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="race-date" type="date"></div>
+        <div class="form-group"><label class="form-label">Start Time (UK)</label><input class="form-input" id="race-start-time" type="time"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Winner (if completed)</label><input class="form-input" id="race-winner" placeholder="Driver name"></div>
+        <div class="form-group"><label class="form-label">Race Duration</label><input class="form-input" id="race-time" placeholder="1:12:34"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-race')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRace()">Save Race</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRANSFER -->
+<div class="modal-overlay" id="modal-transfer">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="transfer-modal-title">Add Transfer</div><button class="modal-close" onclick="closeModal('modal-transfer')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="transfer-idx" value="-1">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Driver Name</label><input class="form-input" id="tr-driver" placeholder="Full name"></div>
+        <div class="form-group"><label class="form-label">Driver Code</label><input class="form-input" id="tr-code" placeholder="STR" maxlength="3"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">From Team</label><input class="form-input" id="tr-from" placeholder="Previous team / Free Agent"></div>
+        <div class="form-group"><label class="form-label">To Team</label><input class="form-input" id="tr-to" placeholder="New team / Free Agent"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="tr-date" type="date"></div>
+      <div class="form-group"><label class="form-label">Note (optional)</label><input class="form-input" id="tr-note" placeholder="e.g. 1-year deal, effective Round 5"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-transfer')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTransfer()">Save Transfer</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEWS -->
+<div class="modal-overlay" id="modal-news">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="news-modal-title">Add Article</div><button class="modal-close" onclick="closeModal('modal-news')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="news-idx" value="-1">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Tag / Category</label>
+          <select class="form-select" id="news-tag">
+            <option value="Race">Race</option>
+            <option value="Transfer">Transfer</option>
+            <option value="Team">Team</option>
+            <option value="Driver">Driver</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="news-date" type="date"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Headline</label><input class="form-input" id="news-title" placeholder="Article headline"></div>
+      <div class="form-group"><label class="form-label">Short Excerpt</label><input class="form-input" id="news-excerpt" placeholder="One-line summary shown on card"></div>
+      <div class="form-group"><label class="form-label">Full Content</label><textarea class="form-textarea" id="news-content" placeholder="Full article text (optional)"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-news')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveNews()">Save Article</button>
+    </div>
+  </div>
+</div>
+
+<!-- PENALTY -->
+<div class="modal-overlay" id="modal-penalty">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="penalty-modal-title">Add Penalty</div><button class="modal-close" onclick="closeModal('modal-penalty')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="penalty-idx" value="-1">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Driver Name</label>
+          <input class="form-input" id="pen-driver-name" placeholder="Full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Driver Code</label>
+          <input class="form-input" id="pen-driver-code" placeholder="VER" maxlength="3" style="text-transform:uppercase">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Penalty Type</label>
+          <select class="form-select" id="pen-type">
+            <option value="Time">Time Penalty</option>
+            <option value="Grid">Grid Penalty</option>
+            <option value="Points">Points Deduction</option>
+            <option value="DSQ">Disqualification</option>
+            <option value="DT">Drive-Through</option>
+            <option value="Warning">Warning</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Detail (e.g. +10s / -5 grid)</label>
+          <input class="form-input" id="pen-detail" placeholder="e.g. +10 seconds">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Race Name</label>
+          <select class="form-select" id="pen-race-sel" onchange="syncPenRace()"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input class="form-input" id="pen-date" type="date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reason / Incident</label>
+        <textarea class="form-textarea" id="pen-reason" placeholder="e.g. Unsafe release from pits, causing a collision with car #7" style="height:72px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-penalty')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePenalty()">Save Penalty</button>
+    </div>
+  </div>
+</div>
+
+<!-- HALL OF FAME -->
+<div class="modal-overlay" id="modal-hof">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="hof-modal-title">Add Hall of Fame Entry</div><button class="modal-close" onclick="closeModal('modal-hof')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="hof-idx" value="-1">
+      <div class="form-group"><label class="form-label">Driver Name</label><input class="form-input" id="hof-name" placeholder="e.g. Max Verstappen"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Career Wins</label><input class="form-input" id="hof-wins" type="number" value="0"></div>
+        <div class="form-group"><label class="form-label">Career Poles</label><input class="form-input" id="hof-poles" type="number" value="0"></div>
+        <div class="form-group"><label class="form-label">Career Podiums</label><input class="form-input" id="hof-podiums" type="number" value="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Seasons Competed</label><input class="form-input" id="hof-seasons" type="number" value="1"></div>
+        <div class="form-group"><label class="form-label">Career Points</label><input class="form-input" id="hof-points" type="number" value="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Best Finish</label><input class="form-input" id="hof-bestfinish" placeholder="e.g. P1 (Season 1 R5)"></div>
+        <div class="form-group"><label class="form-label">Best Season</label><input class="form-input" id="hof-bestseason" placeholder="e.g. Season 1 (Champion)"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Championships Won (one per line, e.g. FP1 S1)</label><textarea class="form-textarea" id="hof-championships" placeholder="FP1 Season 1&#10;FP2 Season 2" style="height:80px"></textarea></div>
+      <div class="form-group"><label class="form-label">Note / Quote (optional)</label><input class="form-input" id="hof-note" placeholder="e.g. The greatest driver in FP League history"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-hof')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveHof()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- PASSWORD GATE -->
+<div id="pw-gate" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#1A1A1A;border:1px solid #2A2A2A;border-top:3px solid #E8001D;border-radius:10px;padding:40px;width:340px;text-align:center;">
+    <div style="font-size:28px;font-weight:900;letter-spacing:2px;margin-bottom:4px"><span style="color:#E8001D">FP</span> ADMIN</div>
+    <div style="font-size:12px;color:#888;margin-bottom:28px;letter-spacing:1px">ENTER PASSWORD TO CONTINUE</div>
+    <input type="password" id="pw-input" style="width:100%;background:#222;border:1px solid #2A2A2A;border-radius:6px;color:#EFEFEF;font-size:16px;padding:12px;outline:none;text-align:center;letter-spacing:4px;margin-bottom:12px" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPw()">
+    <button onclick="checkPw()" style="width:100%;padding:12px;background:#E8001D;border:none;border-radius:6px;color:white;font-size:14px;font-weight:700;cursor:pointer;">Enter Admin</button>
+    <div id="pw-err" style="color:#E8001D;font-size:12px;margin-top:10px;display:none">Wrong password. Try again.</div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// PASSWORD GATE
+// ════════════════════════════════════════════════
+function checkPw(){
+  const val=document.getElementById('pw-input').value;
+  if(val===ADMIN_PASSWORD||(!JSONBIN_ENABLED&&val==='admin')){
+    document.getElementById('pw-gate').style.display='none';
+    sessionStorage.setItem('fpAdminAuth','1');
+    initAdmin();
+  } else {
+    document.getElementById('pw-err').style.display='block';
+    document.getElementById('pw-input').value='';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+function showGate(){
+  // Always show gate when JSONBin is configured
+  if(JSONBIN_ENABLED&&!sessionStorage.getItem('fpAdminAuth')){
+    document.getElementById('pw-gate').style.display='flex';
+    setTimeout(()=>document.getElementById('pw-input').focus(),100);
+  } else {
+    document.getElementById('pw-gate').style.display='none';
+    initAdmin();
+  }
+}
+
+// ════════════════════════════════════════════════
+// DEFAULT DATA + LOAD
+// ════════════════════════════════════════════════
+const DEFAULT = {
+  settings:{leagueName:"FP League",season:1,fp1Name:"FP 1",fp2Name:"FP 2",totalRounds:16,fantasyBudget:25},
+  points:[25,18,15,12,10,8,6,4,2,1],
+  fp1:{teams:[],drivers:[],schedule:[],transfers:[],news:[],penalties:[]},
+  fp2:{teams:[],drivers:[],schedule:[],transfers:[],news:[],penalties:[]},
+  hallOfFame:[],
+};
+
+let DB = JSON.parse(JSON.stringify(DEFAULT));
+
+function sanitizeDB(data){
+  if(!data) return JSON.parse(JSON.stringify(DEFAULT));
+  ['fp1','fp2'].forEach(div=>{
+    if(!data[div]) data[div]={teams:[],drivers:[],schedule:[],transfers:[],news:[],penalties:[]};
+    if(!data[div].penalties) data[div].penalties=[];
+    ['teams','drivers','schedule','transfers','news','penalties'].forEach(key=>{
+      if(!data[div][key]) data[div][key]=[];
+      else if(!Array.isArray(data[div][key])) data[div][key]=Object.values(data[div][key]);
+    });
+    data[div].drivers.forEach(dr=>{if(dr.pts===undefined)dr.pts=0;if(dr.wins===undefined)dr.wins=0;if(dr.poles===undefined)dr.poles=0;});
+  });
+  if(!data.hallOfFame) data.hallOfFame=[];
+  if(!Array.isArray(data.hallOfFame)) data.hallOfFame=Object.values(data.hallOfFame);
+  if(!data.settings) data.settings=DEFAULT.settings;
+  if(!Array.isArray(data.points)) data.points=DEFAULT.points;
+  return data;
+}
+
+async function initAdmin(){
+  if(JSONBIN_ENABLED){
+    try{
+      const res=await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{
+        headers:{'X-Master-Key':JSONBIN_KEY,'X-Bin-Meta':false}
+      });
+      if(res.ok){ const data=await res.json(); DB=sanitizeDB(data); }
+    }catch(e){ console.warn('JSONBin load failed',e); }
+  } else {
+    try{const s=localStorage.getItem('fpLeagueData');if(s)DB=sanitizeDB(JSON.parse(s));}catch(e){}
+  }
+  renderDash();renderSettings();
+}
+
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let currentDiv='fp1';
+let currentPage='dashboard';
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+const COLORS=['#E8001D','#FF6B00','#FFD700','#00C853','#0057FF','#8B00FF','#FF2D78','#8A8A8A','#00BFA5','#FFFFFF','#111111','#FF4500','#00BFFF','#FF69B4','#7FFF00'];
+
+// ════════════════════════════════════════════════
+// NAV
+// ════════════════════════════════════════════════
+function goto(page, el){
+  currentPage=page;
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const labels={dashboard:'Dashboard',calendar:'Calendar',teams:'Teams',drivers:'Drivers',schedule:'Schedule',results:'Race Results',standings:'Standings',transfers:'Transfers',news:'News',penalties:'Penalties',halloffame:'Hall of Fame',cards:'Trading Cards',fantasy:'Fantasy',settings:'Settings',data:'Import / Export',liverace:'🔴 Live Race'};
+  document.getElementById('topbar-title').innerHTML=`<span>FP</span> ${labels[page]||page}`;
+  renderPage(page);
+}
+
+function setDiv(div){
+  currentDiv=div;
+  document.querySelectorAll('.div-pill').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.div-pill.'+div).classList.add('active');
+  renderPage(currentPage);
+}
+
+function renderPage(p){
+  if(p==='dashboard')  renderDash();
+  if(p==='calendar')   renderCalendar();
+  if(p==='teams')      renderTeams();
+  if(p==='drivers')    renderDrivers();
+  if(p==='schedule')   renderSchedule();
+  if(p==='results')    { document.getElementById('res-div').value=currentDiv; loadResRaces(); renderPastResults(); }
+  if(p==='standings')  renderStandings();
+  if(p==='transfers')  renderTransfers();
+  if(p==='news')       renderNews();
+  if(p==='halloffame') renderHof();
+  if(p==='penalties')  renderAdminPenalties();
+  if(p==='cards') renderCards();
+  if(p==='fantasy')    adminLoadFantasy();
+  if(p==='settings')   renderSettings();
+  if(p==='data')       updateRaw();
+    if(p==='liverace')   renderLiveRace();
+}
+
+// ════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════
+function tc(div,idx){return DB[div].teams[idx]?.color||'#555';}
+function tn(div,idx){return DB[div].teams[idx]?.name||'—';}
+function fmtDate(str){if(!str)return'—';try{return new Date(str+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch{return str;}}
+function sorted(div){return[...DB[div].drivers].sort((a,b)=>b.pts-a.pts);}
+function sortedTeams(div){return[...DB[div].teams].sort((a,b)=>b.pts-a.pts);}
+function setDivLabel(id,text){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.textContent=text;
+  el.style.color=currentDiv==='fp1'?'var(--red)':'var(--blue)';
+}
+
+// ════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════
+function renderDash(){
+  const d=DB[currentDiv];
+  setDivLabel('dash-div-lbl', currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name);
+  const completed=d.schedule.filter(r=>r.status==='completed').length;
+  document.getElementById('dash-stats').innerHTML=`
+    <div class="stat-card"><div class="val" style="color:var(--red)">${d.drivers.length}</div><div class="lbl">Drivers</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--orange)">${d.teams.length}</div><div class="lbl">Teams</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--yellow)">${completed}/${d.schedule.length}</div><div class="lbl">Races Done</div></div>
+  `;
+  const srt=sorted(currentDiv).slice(0,5);
+  document.getElementById('dash-drivers-tbl').innerHTML=`
+    <thead><tr><th>Pos</th><th>Driver</th><th>Team</th><th>Pts</th></tr></thead>
+    <tbody>${srt.map((dr,i)=>`<tr>
+      <td style="font-weight:900;color:${i===0?'var(--yellow)':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--sub)'}">${i+1}</td>
+      <td style="font-weight:700">${dr.name} <span style="font-size:10px;color:var(--sub)">${dr.code}</span></td>
+      <td style="color:var(--sub);font-size:12px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${tc(currentDiv,dr.team)};margin-right:6px"></span>${tn(currentDiv,dr.team)}</td>
+      <td style="font-weight:800">${dr.pts}</td>
+    </tr>`).join('')}</tbody>
+  `;
+  const upcoming=d.schedule.filter(r=>r.status!=='completed').slice(0,3);
+  document.getElementById('dash-upcoming').innerHTML=upcoming.length?upcoming.map(r=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-weight:700;font-size:13px">${r.name}</div><div style="font-size:11px;color:var(--sub)">Round ${r.round} · ${fmtDate(r.date)}</div></div>
+      <span class="badge ${r.status==='next'?'badge-yellow':'badge-grey'}">${r.status}</span>
+    </div>
+  `).join(''):'<div style="color:var(--sub);font-size:13px;padding:8px 0">No upcoming races.</div>';
+  const st=sortedTeams(currentDiv);
+  document.getElementById('dash-constructors-tbl').innerHTML=`
+    <thead><tr><th>Pos</th><th>Team</th><th>Pts</th></tr></thead>
+    <tbody>${st.map((t,i)=>`<tr>
+      <td style="font-weight:900;color:${i===0?'var(--yellow)':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--sub)'}">${i+1}</td>
+      <td style="font-weight:700"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.color};margin-right:8px"></span>${t.name}</td>
+      <td style="font-weight:800">${t.pts}</td>
+    </tr>`).join('')}</tbody>
+  `;
+}
+
+// ════════════════════════════════════════════════
+// CALENDAR
+// ════════════════════════════════════════════════
+function renderCalendar(){
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-label').textContent=months[calMonth]+' '+calYear;
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const dim=new Date(calYear,calMonth+1,0).getDate();
+  const dip=new Date(calYear,calMonth,0).getDate();
+  const today=new Date();
+  const allRaces=[];
+  ['fp1','fp2'].forEach(div=>DB[div].schedule.forEach(r=>{if(r.date)allRaces.push({...r,div});}));
+  let cells=[];
+  for(let i=firstDay-1;i>=0;i--) cells.push({day:dip-i,other:true});
+  for(let d=1;d<=dim;d++) cells.push({day:d,other:false});
+  while(cells.length%7!==0) cells.push({day:cells.length-dim-firstDay+1,other:true});
+  const grid=document.getElementById('cal-grid');
+  grid.innerHTML='';
+  cells.forEach(cell=>{
+    const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(cell.day).padStart(2,'0')}`;
+    const races=allRaces.filter(r=>r.date===ds);
+    const isToday=!cell.other&&today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===cell.day;
+    const el=document.createElement('div');
+    el.className=`cal-day ${cell.other?'other-month':''} ${isToday?'today':''} ${races.length?'has-race':''}`;
+    el.innerHTML=`<div class="cal-day-num">${cell.day}</div>`+races.map(r=>`<div class="cal-race-chip ${r.div==='fp2'?'fp2-chip':''} ${r.status==='completed'?'done-chip':''}">${r.div.toUpperCase()} R${r.round}</div>`).join('');
+    grid.appendChild(el);
+  });
+  const sorted_r=allRaces.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  document.getElementById('cal-race-tbody').innerHTML=sorted_r.map((r,i)=>`<tr>
+    <td><span class="badge ${r.div==='fp1'?'badge-red':'badge-blue'}">${r.div.toUpperCase()}</span></td>
+    <td>${r.round}</td>
+    <td style="font-weight:600">${r.name}</td>
+    <td style="color:var(--sub)">${fmtDate(r.date)}</td>
+    <td><span class="badge ${r.status==='completed'?'badge-grey':r.status==='next'?'badge-yellow':'badge-green'}">${r.status}</span></td>
+    <td>
+      <button class="btn btn-secondary btn-sm btn-icon" onclick="openEditRace('${r.div}',${DB[r.div].schedule.indexOf(r)})">✏</button>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="deleteRace('${r.div}',${DB[r.div].schedule.indexOf(r)})">🗑</button>
+    </td>
+  </tr>`).join('');
+}
+function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+
+// ════════════════════════════════════════════════
+// TEAMS
+// ════════════════════════════════════════════════
+function renderTeams(){
+  setDivLabel('teams-div-lbl', currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name);
+  document.getElementById('teams-tbody').innerHTML=DB[currentDiv].teams.map((t,i)=>`<tr>
+    <td><span style="display:inline-block;width:24px;height:24px;border-radius:6px;background:${t.color}"></span></td>
+    <td style="font-weight:700">${t.name}</td>
+    <td>${t.pts}</td>
+    <td>${t.wins}</td>
+    <td style="color:var(--sub);font-size:12px">${DB[currentDiv].drivers.filter(d=>d.team===i).map(d=>d.code).join(', ')||'—'}</td>
+    <td>
+      <button class="btn btn-secondary btn-sm btn-icon" onclick="openEditTeam(${i})">✏</button>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="deleteTeam(${i})">🗑</button>
+    </td>
+  </tr>`).join('');
+}
+
+function openAddTeam(){
+  document.getElementById('team-modal-title').textContent='Add Team';
+  document.getElementById('team-idx').value=-1;
+  document.getElementById('team-name').value='';
+  document.getElementById('team-color').value='#E8001D';
+  document.getElementById('team-pts').value=0;
+  document.getElementById('team-wins').value=0;
+  buildSwatches('team');syncColor('team');openModal('modal-team');
+}
+function openEditTeam(i){
+  const t=DB[currentDiv].teams[i];
+  document.getElementById('team-modal-title').textContent='Edit Team';
+  document.getElementById('team-idx').value=i;
+  document.getElementById('team-name').value=t.name;
+  document.getElementById('team-color').value=t.color;
+  document.getElementById('team-pts').value=t.pts;
+  document.getElementById('team-wins').value=t.wins;
+  buildSwatches('team');syncColor('team');openModal('modal-team');
+}
+function saveTeam(){
+  const i=parseInt(document.getElementById('team-idx').value);
+  const t={name:document.getElementById('team-name').value.trim()||'Team',color:document.getElementById('team-color').value,pts:parseInt(document.getElementById('team-pts').value)||0,wins:parseInt(document.getElementById('team-wins').value)||0};
+  if(i===-1) DB[currentDiv].teams.push(t);
+  else DB[currentDiv].teams[i]=t;
+  closeModal('modal-team');renderTeams();toast('Team saved!');
+}
+function deleteTeam(i){
+  if(!confirm('Delete this team?')) return;
+  DB[currentDiv].teams.splice(i,1);
+  DB[currentDiv].drivers.forEach(d=>{if(d.team>=i)d.team=Math.max(0,d.team-1);});
+  renderTeams();toast('Team deleted.');
+}
+
+// ════════════════════════════════════════════════
+// DRIVERS
+// ════════════════════════════════════════════════
+function renderDrivers(){
+  setDivLabel('drivers-div-lbl', currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name);
+  const srt=sorted(currentDiv);
+  document.getElementById('drivers-tbody').innerHTML=srt.map((dr,i)=>`<tr>
+    <td style="font-weight:900;color:${i===0?'var(--yellow)':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--sub)'}">${i+1}</td>
+    <td style="font-weight:700">${dr.name}</td>
+    <td><span style="background:${tc(currentDiv,dr.team)};color:white;font-size:9px;font-weight:800;padding:2px 7px;border-radius:3px">${dr.code}</span></td>
+    <td style="color:var(--sub);font-size:12px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${tc(currentDiv,dr.team)};margin-right:6px"></span>${tn(currentDiv,dr.team)}</td>
+    <td style="font-weight:800">${dr.pts}</td>
+    <td>${dr.wins}</td>
+    <td><span style="font-family:var(--f1);font-size:11px;font-weight:900;color:var(--purple)">£${dr.fantasyValue||10}m</span></td>
+    <td>
+      <button class="btn btn-secondary btn-sm btn-icon" onclick="openEditDriver(${DB[currentDiv].drivers.indexOf(dr)})">✏</button>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="deleteDriver(${DB[currentDiv].drivers.indexOf(dr)})">🗑</button>
+    </td>
+  </tr>`).join('');
+}
+function buildDriverTeamSelect(selectedTeam){
+  document.getElementById('driver-team').innerHTML=DB[currentDiv].teams.map((t,i)=>`<option value="${i}" ${i===selectedTeam?'selected':''}>${t.name}</option>`).join('');
+}
+function openAddDriver(){
+  document.getElementById('driver-modal-title').textContent='Add Driver';
+  document.getElementById('driver-idx').value=-1;
+  document.getElementById('driver-name').value='';
+  document.getElementById('driver-code').value='';
+  document.getElementById('driver-pts').value=0;
+  document.getElementById('driver-wins').value=0;
+  document.getElementById('driver-poles').value=0;
+  document.getElementById('driver-fantasy-value').value=10;
+  document.getElementById('driver-photo').value='';
+  document.getElementById('driver-change').value='eq';
+  buildDriverTeamSelect(0);openModal('modal-driver');
+}
+function openEditDriver(i){
+  const dr=DB[currentDiv].drivers[i];
+  document.getElementById('driver-modal-title').textContent='Edit Driver';
+  document.getElementById('driver-idx').value=i;
+  document.getElementById('driver-name').value=dr.name;
+  document.getElementById('driver-code').value=dr.code;
+  document.getElementById('driver-pts').value=dr.pts;
+  document.getElementById('driver-wins').value=dr.wins;
+  document.getElementById('driver-poles').value=dr.poles||0;
+  document.getElementById('driver-fantasy-value').value=dr.fantasyValue||10;
+  document.getElementById('driver-photo').value=dr.photo||'';
+  document.getElementById('driver-change').value=dr.change||'eq';
+  buildDriverTeamSelect(dr.team);openModal('modal-driver');
+}
+function saveDriver(){
+  const i=parseInt(document.getElementById('driver-idx').value);
+  const dr={name:document.getElementById('driver-name').value.trim()||'Driver',code:document.getElementById('driver-code').value.toUpperCase().slice(0,3)||'???',team:parseInt(document.getElementById('driver-team').value)||0,pts:parseInt(document.getElementById('driver-pts').value)||0,wins:parseInt(document.getElementById('driver-wins').value)||0,poles:parseInt(document.getElementById('driver-poles').value)||0,fantasyValue:parseInt(document.getElementById('driver-fantasy-value').value)||10,photo:document.getElementById('driver-photo').value.trim()||null,change:document.getElementById('driver-change').value,pos:0};
+  if(i===-1) DB[currentDiv].drivers.push(dr);
+  else DB[currentDiv].drivers[i]=dr;
+  closeModal('modal-driver');renderDrivers();toast('Driver saved!');
+}
+function deleteDriver(i){
+  if(!confirm('Delete this driver?')) return;
+  DB[currentDiv].drivers.splice(i,1);renderDrivers();toast('Driver deleted.');
+}
+
+// ════════════════════════════════════════════════
+// SCHEDULE
+// ════════════════════════════════════════════════
+function renderSchedule(){
+  setDivLabel('schedule-div-lbl', currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name);
+  const sched=[...DB[currentDiv].schedule].sort((a,b)=>a.round-b.round);
+  document.getElementById('schedule-tbody').innerHTML=sched.map((r,i)=>`<tr>
+    <td style="font-weight:700">${r.round}</td>
+    <td style="font-weight:600">${r.name}</td>
+    <td style="color:var(--sub)">${fmtDate(r.date)}</td>
+    <td><span class="badge ${r.status==='completed'?'badge-grey':r.status==='next'?'badge-yellow':'badge-green'}">${r.status}</span></td>
+    <td style="color:var(--sub)">${r.winner||'—'}</td>
+    <td>
+      <button class="btn btn-secondary btn-sm btn-icon" onclick="openEditRace('${currentDiv}',${DB[currentDiv].schedule.indexOf(r)})">✏</button>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="deleteRace('${currentDiv}',${DB[currentDiv].schedule.indexOf(r)})">🗑</button>
+    </td>
+  </tr>`).join('');
+}
+function openAddRace(){
+  document.getElementById('race-modal-title').textContent='Add Race';
+  document.getElementById('race-idx').value=-1;
+  document.getElementById('race-div-sel').value=currentDiv;
+  document.getElementById('race-round').value='';
+  document.getElementById('race-name').value='';
+  document.getElementById('race-date').value='';
+  document.getElementById('race-status').value='upcoming';
+  document.getElementById('race-start-time').value='';
+  document.getElementById('race-winner').value='';
+  document.getElementById('race-time').value='';
+  openModal('modal-race');
+}
+function openEditRace(div,i){
+  const r=DB[div].schedule[i];
+  document.getElementById('race-modal-title').textContent='Edit Race';
+  document.getElementById('race-idx').value=i;
+  document.getElementById('race-div-sel').value=div;
+  document.getElementById('race-round').value=r.round;
+  document.getElementById('race-name').value=r.name;
+  document.getElementById('race-date').value=r.date||'';
+  document.getElementById('race-status').value=r.status;
+  document.getElementById('race-start-time').value=r.startTime||'';
+  document.getElementById('race-winner').value=r.winner||'';
+  document.getElementById('race-time').value=r.time||'';
+  openModal('modal-race');
+}
+function saveRace(){
+  const idx=parseInt(document.getElementById('race-idx').value);
+  const div=document.getElementById('race-div-sel').value;
+  const race={round:parseInt(document.getElementById('race-round').value)||1,name:document.getElementById('race-name').value.trim()||'Race',date:document.getElementById('race-date').value,startTime:document.getElementById('race-start-time').value||null,status:document.getElementById('race-status').value,winner:document.getElementById('race-winner').value.trim()||null,time:document.getElementById('race-time').value.trim()||null,results:idx>=0?DB[div].schedule[idx].results||[]:[]};
+  if(idx===-1) DB[div].schedule.push(race);
+  else DB[div].schedule[idx]=race;
+  closeModal('modal-race');
+  if(currentPage==='calendar') renderCalendar();
+  if(currentPage==='schedule') renderSchedule();
+  toast('Race saved!');
+}
+function deleteRace(div,i){
+  if(!confirm('Delete this race?')) return;
+  DB[div].schedule.splice(i,1);
+  if(currentPage==='calendar') renderCalendar();
+  if(currentPage==='schedule') renderSchedule();
+  toast('Race deleted.');
+}
+
+// ════════════════════════════════════════════════
+// RESULTS — F1 POINTS AUTO-CALC
+// ════════════════════════════════════════════════
+function loadResRaces(){
+  const div=document.getElementById('res-div').value;
+  const races=[...DB[div].schedule].sort((a,b)=>a.round-b.round);
+  document.getElementById('res-race').innerHTML=races.map((r,i)=>`<option value="${i}">${r.round}. ${r.name} ${r.status==='completed'?'✓':''}</option>`).join('');
+  loadResForm();
+}
+
+function loadResForm(){
+  const div=document.getElementById('res-div').value;
+  const raceIdx=parseInt(document.getElementById('res-race').value)||0;
+  const race=DB[div].schedule[raceIdx];
+  if(!race){document.getElementById('res-rows').innerHTML='<div style="color:var(--sub)">No races found.</div>';return;}
+  document.getElementById('res-title').textContent=`Round ${race.round}: ${race.name}`;
+  document.getElementById('res-time').value=race.time||'';
+  document.getElementById('res-status').value=race.status||'upcoming';
+  const drivers=DB[div].drivers;
+  const pts=DB.points;
+  const existing=race.results||[];
+
+  // Build position rows — one per driver
+  const numDrivers=drivers.length;
+  const rows=[];
+  for(let pos=1;pos<=numDrivers;pos++){
+    const existingEntry=existing.find(r=>r.pos===pos);
+    const selDriver=existingEntry?.driver||'';
+    const selPts=existingEntry?.pts!==undefined?existingEntry.pts:(pts[pos-1]||0);
+    const isFl=existingEntry?.fastestLap||false;
+    const isDnf=existingEntry?.dnf||false;
+    const pbClass=pos===1?'pb-1':pos===2?'pb-2':pos===3?'pb-3':'pb-n';
+    const driverOpts=`<option value="">— Select Driver —</option>`+drivers.map(d=>`<option value="${d.code}" ${d.code===selDriver?'selected':''}>${d.name} (${d.code})</option>`).join('');
+    const displayPts=isDnf?0:selPts;
+    rows.push(`<div class="pos-row${isDnf?' is-dnf':''}" id="pos-row-${pos}">
+      <div class="pos-badge ${pbClass}">${pos}</div>
+      <select class="form-select" id="res-driver-${pos}" onchange="onDriverSelect(${pos})">${driverOpts}</select>
+      <div class="pts-display" id="res-pts-${pos}">${displayPts}</div>
+      <label class="fl-check"><input type="checkbox" id="res-fl-${pos}" ${isFl&&!isDnf?'checked':''} ${isDnf?'disabled':''}><span style="font-size:9px;color:var(--purple)">FL</span></label>
+      <label class="dnf-check"><input type="checkbox" id="res-dnf-${pos}" ${isDnf?'checked':''} onchange="onDnfChange(${pos})"><span style="font-size:9px;color:var(--red)">DNF</span></label>
+    </div>`);
+  }
+  document.getElementById('res-rows').innerHTML=rows.join('');
+
+  // Winner display
+  const winnerEntry=existing.find(r=>r.pos===1);
+  if(winnerEntry){
+    const wd=drivers.find(d=>d.code===winnerEntry.driver);
+    document.getElementById('res-winner-display').value=wd?.name||winnerEntry.driver||'';
+  } else {
+    document.getElementById('res-winner-display').value='';
+  }
+}
+
+function onDriverSelect(pos){
+  // Auto-fill points for this position
+  const pts=DB.points[pos-1]||0;
+  document.getElementById('res-pts-'+pos).textContent=pts;
+  // Auto-update winner display if P1 changed
+  if(pos===1){
+    const div=document.getElementById('res-div').value;
+    const code=document.getElementById('res-driver-1').value;
+    const dr=DB[div].drivers.find(d=>d.code===code);
+    document.getElementById('res-winner-display').value=dr?.name||code||'';
+  }
+}
+
+function onDnfChange(pos){
+  const isDnf=document.getElementById('res-dnf-'+pos)?.checked||false;
+  const row=document.getElementById('pos-row-'+pos);
+  const ptsEl=document.getElementById('res-pts-'+pos);
+  const flEl=document.getElementById('res-fl-'+pos);
+  if(isDnf){
+    ptsEl.textContent='0';
+    flEl.checked=false;
+    flEl.disabled=true;
+    row.classList.add('is-dnf');
+  } else {
+    const standardPts=DB.points[pos-1]||0;
+    ptsEl.textContent=standardPts;
+    flEl.disabled=false;
+    row.classList.remove('is-dnf');
+  }
+}
+
+function autoFillOrder(){
+  // Reset points displays to standard F1 allocation
+  const div=document.getElementById('res-div').value;
+  const numDrivers=DB[div].drivers.length;
+  for(let pos=1;pos<=numDrivers;pos++){
+    document.getElementById('res-pts-'+pos).textContent=DB.points[pos-1]||0;
+  }
+  toast('Points reset to F1 standard.');
+}
+
+function saveResults(){
+  const div=document.getElementById('res-div').value;
+  const raceIdx=parseInt(document.getElementById('res-race').value)||0;
+  const race=DB[div].schedule[raceIdx];
+  if(!race) return;
+
+  const drivers=DB[div].drivers;
+  const numDrivers=drivers.length;
+
+  // Collect finishing order
+  const results=[];
+  const usedDrivers=new Set();
+
+  for(let pos=1;pos<=numDrivers;pos++){
+    const driverCode=document.getElementById('res-driver-'+pos)?.value||'';
+    if(!driverCode) continue;
+    if(usedDrivers.has(driverCode)){
+      toast('Error: '+driverCode+' appears more than once!',true);return;
+    }
+    usedDrivers.add(driverCode);
+    const pts=parseInt(document.getElementById('res-pts-'+pos)?.textContent)||0;
+    const fl=document.getElementById('res-fl-'+pos)?.checked||false;
+    const dnf=document.getElementById('res-dnf-'+pos)?.checked||false;
+    const finalPts=dnf?0:(fl?pts+1:pts);
+    const obj={pos,driver:driverCode,pts:finalPts,fastestLap:fl&&!dnf,gap:pos===1?null:'+'+(pos*2+Math.random()).toFixed(3)};
+    if(dnf) obj.dnf=true;
+    results.push(obj);
+  }
+
+  // Validate — only one fastest lap
+  const flCount=results.filter(r=>r.fastestLap).length;
+  if(flCount>1){toast('Error: Only one driver can have Fastest Lap.',true);return;}
+
+  // Update race
+  race.results=results;
+  race.status=document.getElementById('res-status').value;
+  race.time=document.getElementById('res-time').value.trim()||null;
+  const p1=results.find(r=>r.pos===1&&!r.dnf);
+  if(p1){
+    const wd=drivers.find(d=>d.code===p1.driver);
+    race.winner=document.getElementById('res-winner-display').value||wd?.name||p1.driver;
+  }
+
+  // Reset driver pts & wins from scratch (recalc from all results)
+  drivers.forEach(d=>{d.pts=0;d.wins=0;});
+  DB[div].schedule.forEach(r=>{
+    if(!r.results) return;
+    r.results.forEach(res=>{
+      const dr=drivers.find(d=>d.code===res.driver);
+      if(dr){ dr.pts+=res.pts; if(res.pos===1) dr.wins+=1; }
+    });
+  });
+
+  // Update change indicator
+  const prevOrder=drivers.map(d=>d.code);
+  const newOrder=[...drivers].sort((a,b)=>b.pts-a.pts).map(d=>d.code);
+  drivers.forEach(d=>{
+    const prev=prevOrder.indexOf(d.code);
+    const now=newOrder.indexOf(d.code);
+    d.change=now<prev?'up':now>prev?'dn':'eq';
+    d.pos=now+1;
+  });
+
+  // Update team pts & wins
+  DB[div].teams.forEach((t,ti)=>{
+    t.pts=drivers.filter(d=>d.team===ti).reduce((s,d)=>s+d.pts,0);
+    t.wins=drivers.filter(d=>d.team===ti).reduce((s,d)=>s+d.wins,0);
+  });
+
+  saveAll();
+  renderPastResults();
+  toast('Results saved! Points updated automatically ✓');
+}
+
+function renderPastResults(){
+  const div=document.getElementById('res-div').value;
+  const completed=[...DB[div].schedule].filter(r=>r.results?.length).sort((a,b)=>a.round-b.round);
+  document.getElementById('past-results-tbody').innerHTML=completed.map(r=>`<tr>
+    <td style="font-weight:700">${r.round}</td>
+    <td style="font-weight:600">${r.name}</td>
+    <td style="color:var(--sub)">${r.winner||'—'}</td>
+    <td style="color:var(--sub)">${fmtDate(r.date)}</td>
+    <td style="color:var(--sub)">${r.results.length} drivers</td>
+  </tr>`).join('');
+}
+
+// ════════════════════════════════════════════════
+// STANDINGS
+// ════════════════════════════════════════════════
+function renderStandings(){
+  setDivLabel('standings-div-lbl', currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name);
+  const srt=sorted(currentDiv);
+  document.getElementById('standings-tbody').innerHTML=srt.map((dr,i)=>`<tr>
+    <td style="font-weight:900;color:${i===0?'var(--yellow)':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--sub)'}">${i+1}</td>
+    <td style="font-weight:700">${dr.name} <span style="background:${tc(currentDiv,dr.team)};color:white;font-size:9px;font-weight:800;padding:2px 7px;border-radius:3px">${dr.code}</span></td>
+    <td style="color:var(--sub);font-size:12px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${tc(currentDiv,dr.team)};margin-right:6px"></span>${tn(currentDiv,dr.team)}</td>
+    <td>${dr.wins}</td>
+    <td style="font-weight:900;font-size:16px">${dr.pts}</td>
+    <td>${dr.change==='up'?'<span style="color:var(--green)">▲</span>':dr.change==='dn'?'<span style="color:var(--red)">▼</span>':'<span style="color:var(--sub)">—</span>'}</td>
+  </tr>`).join('');
+  const st=sortedTeams(currentDiv);
+  document.getElementById('constructor-tbody').innerHTML=st.map((t,i)=>`<tr>
+    <td style="font-weight:900;color:${i===0?'var(--yellow)':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--sub)'}">${i+1}</td>
+    <td style="font-weight:700"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.color};margin-right:8px"></span>${t.name}</td>
+    <td style="color:var(--sub);font-size:12px">${DB[currentDiv].drivers.filter(d=>DB[currentDiv].teams.indexOf(t)===d.team).map(d=>d.name).join(', ')||'—'}</td>
+    <td>${t.wins}</td>
+    <td style="font-weight:900;font-size:16px">${t.pts}</td>
+  </tr>`).join('');
+}
+
+function recalcStandings(){
+  const d=DB[currentDiv];
+  d.drivers.forEach(dr=>{dr.pts=0;dr.wins=0;});
+  d.schedule.forEach(race=>{
+    if(!race.results) return;
+    race.results.forEach(res=>{
+      const dr=d.drivers.find(dd=>dd.code===res.driver);
+      if(dr){dr.pts+=res.pts;if(res.pos===1)dr.wins+=1;}
+    });
+  });
+  d.teams.forEach((t,ti)=>{
+    t.pts=d.drivers.filter(dr=>dr.team===ti).reduce((s,dr)=>s+dr.pts,0);
+    t.wins=d.drivers.filter(dr=>dr.team===ti).reduce((s,dr)=>s+dr.wins,0);
+  });
+  renderStandings();saveAll();toast('Standings recalculated from all race results!');
+}
+
+// ════════════════════════════════════════════════
+// TRANSFERS
+// ════════════════════════════════════════════════
+function renderTransfers(){
+  setDivLabel('transfers-div-lbl', currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name);
+  const list=[...(DB[currentDiv].transfers||[])].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  document.getElementById('transfers-tbody').innerHTML=list.length?list.map((t,i)=>`<tr>
+    <td style="font-weight:700">${t.driver} <span style="font-size:10px;color:var(--sub)">${t.code||''}</span></td>
+    <td style="color:var(--sub)">${t.fromTeam||'Free Agent'}</td>
+    <td style="font-weight:600">${t.toTeam||'Free Agent'}</td>
+    <td style="color:var(--sub)">${fmtDate(t.date)}</td>
+    <td style="color:var(--sub);font-size:12px">${t.note||'—'}</td>
+    <td>
+      <button class="btn btn-secondary btn-sm btn-icon" onclick="openEditTransfer(${i})">✏</button>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="deleteTransfer(${i})">🗑</button>
+    </td>
+  </tr>`).join(''):'<tr><td colspan="6" style="color:var(--sub);text-align:center;padding:24px">No transfers yet.</td></tr>';
+}
+function openAddTransfer(){
+  document.getElementById('transfer-modal-title').textContent='Add Transfer';
+  document.getElementById('transfer-idx').value=-1;
+  ['tr-driver','tr-code','tr-from','tr-to','tr-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('tr-date').value='';
+  openModal('modal-transfer');
+}
+function openEditTransfer(i){
+  const t=DB[currentDiv].transfers[i];
+  document.getElementById('transfer-modal-title').textContent='Edit Transfer';
+  document.getElementById('transfer-idx').value=i;
+  document.getElementById('tr-driver').value=t.driver||'';
+  document.getElementById('tr-code').value=t.code||'';
+  document.getElementById('tr-from').value=t.fromTeam||'';
+  document.getElementById('tr-to').value=t.toTeam||'';
+  document.getElementById('tr-date').value=t.date||'';
+  document.getElementById('tr-note').value=t.note||'';
+  openModal('modal-transfer');
+}
+function saveTransfer(){
+  const i=parseInt(document.getElementById('transfer-idx').value);
+  const t={driver:document.getElementById('tr-driver').value.trim(),code:document.getElementById('tr-code').value.trim().toUpperCase(),fromTeam:document.getElementById('tr-from').value.trim(),toTeam:document.getElementById('tr-to').value.trim(),date:document.getElementById('tr-date').value,note:document.getElementById('tr-note').value.trim()};
+  if(!DB[currentDiv].transfers) DB[currentDiv].transfers=[];
+  if(i===-1) DB[currentDiv].transfers.push(t);
+  else DB[currentDiv].transfers[i]=t;
+  closeModal('modal-transfer');renderTransfers();toast('Transfer saved!');
+}
+function deleteTransfer(i){
+  if(!confirm('Delete this transfer?')) return;
+  DB[currentDiv].transfers.splice(i,1);renderTransfers();toast('Transfer deleted.');
+}
+
+// ════════════════════════════════════════════════
+// NEWS
+// ════════════════════════════════════════════════
+function renderNews(){
+  setDivLabel('news-div-lbl', currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name);
+  const list=[...(DB[currentDiv].news||[])].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  document.getElementById('news-tbody').innerHTML=list.length?list.map((n,i)=>`<tr>
+    <td><span class="badge badge-red">${n.tag||'News'}</span></td>
+    <td style="font-weight:600">${n.title}</td>
+    <td style="color:var(--sub)">${fmtDate(n.date)}</td>
+    <td>
+      <button class="btn btn-secondary btn-sm btn-icon" onclick="openEditNews(${i})">✏</button>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="deleteNews(${i})">🗑</button>
+    </td>
+  </tr>`).join(''):'<tr><td colspan="4" style="color:var(--sub);text-align:center;padding:24px">No articles yet.</td></tr>';
+}
+function openAddNews(){
+  document.getElementById('news-modal-title').textContent='Add Article';
+  document.getElementById('news-idx').value=-1;
+  document.getElementById('news-tag').value='Race';
+  document.getElementById('news-date').value='';
+  document.getElementById('news-title').value='';
+  document.getElementById('news-excerpt').value='';
+  document.getElementById('news-content').value='';
+  openModal('modal-news');
+}
+function openEditNews(i){
+  const n=DB[currentDiv].news[i];
+  document.getElementById('news-modal-title').textContent='Edit Article';
+  document.getElementById('news-idx').value=i;
+  document.getElementById('news-tag').value=n.tag||'Race';
+  document.getElementById('news-date').value=n.date||'';
+  document.getElementById('news-title').value=n.title||'';
+  document.getElementById('news-excerpt').value=n.excerpt||'';
+  document.getElementById('news-content').value=n.content||'';
+  openModal('modal-news');
+}
+function saveNews(){
+  const i=parseInt(document.getElementById('news-idx').value);
+  const n={tag:document.getElementById('news-tag').value,date:document.getElementById('news-date').value,title:document.getElementById('news-title').value.trim(),excerpt:document.getElementById('news-excerpt').value.trim(),content:document.getElementById('news-content').value.trim()};
+  if(!DB[currentDiv].news) DB[currentDiv].news=[];
+  if(i===-1) DB[currentDiv].news.push(n);
+  else DB[currentDiv].news[i]=n;
+  closeModal('modal-news');renderNews();toast('Article saved!');
+}
+function deleteNews(i){
+  if(!confirm('Delete this article?')) return;
+  DB[currentDiv].news.splice(i,1);renderNews();toast('Article deleted.');
+}
+
+// ════════════════════════════════════════════════
+// PENALTIES
+// ════════════════════════════════════════════════
+const PEN_TYPE_LABELS={Time:'Time Penalty',Grid:'Grid Penalty',Points:'Points Deduction',DSQ:'Disqualification',DT:'Drive-Through',Warning:'Warning',Other:'Other'};
+
+function renderAdminPenalties(){
+  setDivLabel('penalties-div-lbl', currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name);
+  if(!DB[currentDiv].penalties) DB[currentDiv].penalties=[];
+  const list=[...DB[currentDiv].penalties].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  document.getElementById('penalties-tbody').innerHTML=list.length?list.map((p,i)=>`<tr>
+    <td><span class="badge ${penBadgeClass(p.type)}">${PEN_TYPE_LABELS[p.type]||p.type}</span></td>
+    <td style="font-weight:700">${p.driverName||'—'} <span style="font-size:10px;color:var(--sub)">${p.driver||''}</span></td>
+    <td style="color:var(--sub)">Rd ${p.round||'—'} · ${p.race||'—'}</td>
+    <td style="font-weight:700;color:var(--orange)">${p.detail||'—'}</td>
+    <td style="color:var(--sub);font-size:12px;max-width:200px">${p.reason||'—'}</td>
+    <td style="color:var(--sub)">${fmtDate(p.date)}</td>
+    <td>
+      <button class="btn btn-secondary btn-sm btn-icon" onclick="openEditPenalty(${i})">✏</button>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="deletePenalty(${i})">🗑</button>
+    </td>
+  </tr>`).join(''):'<tr><td colspan="7" style="color:var(--sub);text-align:center;padding:24px">No penalties issued yet.</td></tr>';
+}
+
+function penBadgeClass(type){
+  return{Time:'badge-yellow',Grid:'badge-blue',Points:'badge-red',DSQ:'badge-red',DT:'',Warning:'badge-yellow',Other:'badge-grey'}[type]||'badge-grey';
+}
+
+function populatePenRaceSelect(){
+  const races=DB[currentDiv].schedule.sort((a,b)=>a.round-b.round);
+  document.getElementById('pen-race-sel').innerHTML='<option value="">— Select Race —</option>'+races.map(r=>`<option value="${r.name}|${r.round}|${r.date||''}">${r.name} (Rd ${r.round})</option>`).join('');
+}
+
+function syncPenRace(){
+  const val=document.getElementById('pen-race-sel').value;
+  if(!val) return;
+  const [name,round,date]=val.split('|');
+  if(date) document.getElementById('pen-date').value=date;
+}
+
+function openAddPenalty(){
+  document.getElementById('penalty-modal-title').textContent='Add Penalty';
+  document.getElementById('penalty-idx').value=-1;
+  document.getElementById('pen-driver-name').value='';
+  document.getElementById('pen-driver-code').value='';
+  document.getElementById('pen-type').value='Time';
+  document.getElementById('pen-detail').value='';
+  document.getElementById('pen-reason').value='';
+  document.getElementById('pen-date').value='';
+  populatePenRaceSelect();
+  openModal('modal-penalty');
+}
+
+function openEditPenalty(i){
+  const p=DB[currentDiv].penalties[i];
+  document.getElementById('penalty-modal-title').textContent='Edit Penalty';
+  document.getElementById('penalty-idx').value=i;
+  document.getElementById('pen-driver-name').value=p.driverName||'';
+  document.getElementById('pen-driver-code').value=p.driver||'';
+  document.getElementById('pen-type').value=p.type||'Time';
+  document.getElementById('pen-detail').value=p.detail||'';
+  document.getElementById('pen-reason').value=p.reason||'';
+  document.getElementById('pen-date').value=p.date||'';
+  populatePenRaceSelect();
+  // Pre-select race
+  const sel=document.getElementById('pen-race-sel');
+  for(let o of sel.options){if(o.value.startsWith(p.race+'|')){o.selected=true;break;}}
+  openModal('modal-penalty');
+}
+
+function savePenalty(){
+  const i=parseInt(document.getElementById('penalty-idx').value);
+  const raceVal=document.getElementById('pen-race-sel').value;
+  const [raceName,raceRound]=raceVal?raceVal.split('|'):['',' '];
+  const p={
+    driverName:document.getElementById('pen-driver-name').value.trim(),
+    driver:document.getElementById('pen-driver-code').value.trim().toUpperCase(),
+    type:document.getElementById('pen-type').value,
+    detail:document.getElementById('pen-detail').value.trim(),
+    reason:document.getElementById('pen-reason').value.trim(),
+    race:raceName||'',
+    round:raceRound?parseInt(raceRound):null,
+    date:document.getElementById('pen-date').value
+  };
+  if(!p.driverName){toast('Enter driver name.','error');return;}
+  if(!DB[currentDiv].penalties) DB[currentDiv].penalties=[];
+  if(i===-1) DB[currentDiv].penalties.push(p);
+  else DB[currentDiv].penalties[i]=p;
+  closeModal('modal-penalty');renderAdminPenalties();toast('Penalty saved!');
+}
+
+function deletePenalty(i){
+  if(!confirm('Delete this penalty?')) return;
+  DB[currentDiv].penalties.splice(i,1);renderAdminPenalties();toast('Penalty deleted.');
+}
+
+// ════════════════════════════════════════════════
+// HALL OF FAME
+// ════════════════════════════════════════════════
+function renderHof(){
+  if(!DB.hallOfFame) DB.hallOfFame=[];
+  const tbody=document.getElementById('hof-tbody');
+  tbody.innerHTML=DB.hallOfFame.length?DB.hallOfFame.map((h,i)=>`<tr>
+    <td style="font-weight:900;color:var(--yellow)">#${i+1}</td>
+    <td style="font-weight:700">${h.name}</td>
+    <td>${(h.championships||[]).join(', ')||'—'}</td>
+    <td>${h.wins||0}</td>
+    <td>${h.poles||0}</td>
+    <td>${h.podiums||0}</td>
+    <td>${h.seasons||0}</td>
+    <td>${h.careerPoints||0}</td>
+    <td>
+      <button class="btn btn-secondary btn-sm" onclick="editHof(${i})">Edit</button>
+      <button class="btn btn-sm" style="background:rgba(232,0,29,.15);color:var(--red);border:1px solid rgba(232,0,29,.3)" onclick="deleteHof(${i})">Delete</button>
+    </td>
+  </tr>`).join(''):'<tr><td colspan="9" style="color:var(--sub);text-align:center;padding:20px">No Hall of Fame entries yet.</td></tr>';
+}
+function openAddHof(){
+  document.getElementById('hof-idx').value=-1;
+  document.getElementById('hof-modal-title').textContent='Add Hall of Fame Entry';
+  document.getElementById('hof-name').value='';
+  document.getElementById('hof-wins').value=0;
+  document.getElementById('hof-poles').value=0;
+  document.getElementById('hof-podiums').value=0;
+  document.getElementById('hof-seasons').value=1;
+  document.getElementById('hof-points').value=0;
+  document.getElementById('hof-bestfinish').value='';
+  document.getElementById('hof-bestseason').value='';
+  document.getElementById('hof-championships').value='';
+  document.getElementById('hof-note').value='';
+  openModal('modal-hof');
+}
+function editHof(i){
+  const h=DB.hallOfFame[i];
+  document.getElementById('hof-idx').value=i;
+  document.getElementById('hof-modal-title').textContent='Edit Hall of Fame Entry';
+  document.getElementById('hof-name').value=h.name||'';
+  document.getElementById('hof-wins').value=h.wins||0;
+  document.getElementById('hof-poles').value=h.poles||0;
+  document.getElementById('hof-podiums').value=h.podiums||0;
+  document.getElementById('hof-seasons').value=h.seasons||1;
+  document.getElementById('hof-points').value=h.careerPoints||0;
+  document.getElementById('hof-bestfinish').value=h.bestFinish||'';
+  document.getElementById('hof-bestseason').value=h.bestSeason||'';
+  document.getElementById('hof-championships').value=(h.championships||[]).join('\n');
+  document.getElementById('hof-note').value=h.note||'';
+  openModal('modal-hof');
+}
+function saveHof(){
+  const i=parseInt(document.getElementById('hof-idx').value);
+  const titles=document.getElementById('hof-championships').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const h={
+    name:document.getElementById('hof-name').value.trim()||'Driver',
+    wins:parseInt(document.getElementById('hof-wins').value)||0,
+    poles:parseInt(document.getElementById('hof-poles').value)||0,
+    podiums:parseInt(document.getElementById('hof-podiums').value)||0,
+    seasons:parseInt(document.getElementById('hof-seasons').value)||1,
+    careerPoints:parseInt(document.getElementById('hof-points').value)||0,
+    bestFinish:document.getElementById('hof-bestfinish').value.trim(),
+    bestSeason:document.getElementById('hof-bestseason').value.trim(),
+    championships:titles,
+    note:document.getElementById('hof-note').value.trim()
+  };
+  if(!DB.hallOfFame) DB.hallOfFame=[];
+  if(i===-1) DB.hallOfFame.push(h);
+  else DB.hallOfFame[i]=h;
+  closeModal('modal-hof');renderHof();toast('Hall of Fame updated!');
+}
+function deleteHof(i){
+  if(!confirm('Remove this entry from the Hall of Fame?')) return;
+  DB.hallOfFame.splice(i,1);renderHof();toast('Entry removed.');
+}
+
+// ════════════════════════════════════════════════
+// TRADING CARDS ADMIN
+// ════════════════════════════════════════════════
+function getRarityAdmin(pos){
+  if(pos===1) return 'legendary';
+  if(pos<=3)  return 'epic';
+  if(pos<=6)  return 'rare';
+  return 'common';
+}
+const RARITY_COLORS={legendary:'var(--yellow)',epic:'var(--purple)',rare:'var(--blue)',common:'var(--sub)'};
+const RARITY_LABELS={legendary:'⭐ LEGENDARY',epic:'💜 EPIC',rare:'🔵 RARE',common:'⬜ COMMON'};
+
+function renderCards(){
+  setDivLabel('cards-div-lbl', currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name);
+  const srt=[...DB[currentDiv].drivers].sort((a,b)=>b.pts-a.pts);
+  const tbody=document.getElementById('cards-tbody');
+  tbody.innerHTML=srt.length?srt.map((dr,i)=>{
+    const rarity=getRarityAdmin(i+1);
+    const col=RARITY_COLORS[rarity];
+    const teamColor=DB[currentDiv].teams[dr.team]?.color||'#555';
+    return `<tr>
+      <td style="font-weight:700">${dr.name} <span style="font-family:monospace;font-size:10px;color:var(--sub)">${dr.code}</span></td>
+      <td><span class="badge ${currentDiv==='fp1'?'badge-red':'badge-blue'}">${currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name}</span></td>
+      <td><span style="font-family:var(--f1);font-size:9px;font-weight:700;color:${col}">${RARITY_LABELS[rarity]}</span></td>
+      <td style="color:var(--sub);font-size:11px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${dr.photo?'<span style="color:var(--green)">✓ Set</span>':'<span style="color:#444">— None</span>'}</td>
+      <td style="color:var(--sub);font-size:11px;font-style:italic">${dr.cardTagline||'—'}</td>
+      <td>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="openEditCardDriver(${DB[currentDiv].drivers.indexOf(dr)})" title="Edit card data">✏</button>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="previewCard(${DB[currentDiv].drivers.indexOf(dr)})" title="Preview card">👁</button>
+      </td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="6" style="color:var(--sub);text-align:center;padding:24px">No drivers in this division yet.</td></tr>';
+}
+
+function openAddCard(){
+  // Cards are auto-generated from drivers — redirect to add driver
+  toast('Cards are generated from drivers. Use the Drivers page to add a new driver.');
+}
+
+function openEditCardDriver(i){
+  const dr=DB[currentDiv].drivers[i];
+  // Re-use the driver modal, pre-populated
+  document.getElementById('driver-modal-title').textContent='Edit Card — '+dr.name;
+  document.getElementById('driver-idx').value=i;
+  document.getElementById('driver-name').value=dr.name;
+  document.getElementById('driver-code').value=dr.code;
+  document.getElementById('driver-pts').value=dr.pts;
+  document.getElementById('driver-wins').value=dr.wins;
+  document.getElementById('driver-poles').value=dr.poles||0;
+  document.getElementById('driver-fantasy-value').value=dr.fantasyValue||10;
+  document.getElementById('driver-photo').value=dr.photo||'';
+  document.getElementById('driver-change').value=dr.change||'eq';
+  buildDriverTeamSelect(dr.team);
+  openModal('modal-driver');
+}
+
+function previewCard(i){
+  const dr=DB[currentDiv].drivers[i];
+  const srt=[...DB[currentDiv].drivers].sort((a,b)=>b.pts-a.pts);
+  const rankInDiv=srt.findIndex(d=>d.code===dr.code)+1;
+  const rarity=getRarityAdmin(rankInDiv);
+  const teamColor=DB[currentDiv].teams[dr.team]?.color||'#555';
+  const teamName=DB[currentDiv].teams[dr.team]?.name||'—';
+  const divLabel=currentDiv==='fp1'?DB.settings.fp1Name:DB.settings.fp2Name;
+  const rarityLabel={legendary:'LEGENDARY',epic:'EPIC',rare:'RARE',common:'COMMON'}[rarity];
+  const rarityGlow={legendary:'rgba(255,215,0,.12)',epic:'rgba(139,0,255,.1)',rare:'rgba(0,87,255,.08)',common:'transparent'}[rarity];
+  const rarityBorder={legendary:'rgba(255,215,0,.35)',epic:'rgba(139,0,255,.35)',rare:'rgba(0,87,255,.3)',common:'#1a1a1a'}[rarity];
+  const rarityBarBg={legendary:'linear-gradient(90deg,#FFD700,#FF6B00,#FFD700)',epic:'linear-gradient(90deg,#8B00FF,#BF7FFF,#8B00FF)',rare:'linear-gradient(90deg,#0057FF,#4db3ff,#0057FF)',common:'#1c1c1c'}[rarity];
+  const pc=rankInDiv===1?'#FFD700':rankInDiv===2?'#C0C0C0':rankInDiv===3?'#FF6B00':'white';
+  const rarityBadgeBg={legendary:'#FFD700',epic:'#8B00FF',rare:'#0057FF',common:'#222'}[rarity];
+  const rarityBadgeColor={legendary:'#000',epic:'white',rare:'white',common:'#555'}[rarity];
+
+  document.getElementById('card-preview-body').innerHTML=`
+    <div style="width:200px;height:300px;border:1px solid ${rarityBorder};overflow:hidden;display:flex;flex-direction:column;background:#060606;box-shadow:0 0 20px ${rarityGlow};flex-shrink:0">
+      <div style="height:3px;background:${rarityBarBg};background-size:200% 100%"></div>
+      <div style="position:relative;height:168px;overflow:hidden;flex-shrink:0;background:radial-gradient(ellipse at 50% 0%,${teamColor}22,#050505)">
+        ${dr.photo?`<img src="${dr.photo}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top" crossorigin="anonymous" onerror="this.style.display='none'">`:''}
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--f1);font-size:44px;font-weight:900;color:rgba(255,255,255,.06)${dr.photo?';display:none':''}">${dr.code}</div>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,#060606 0%,rgba(6,6,6,.5) 45%,transparent 100%)"></div>
+        <div style="position:absolute;top:8px;left:8px;font-family:var(--f1);font-size:6px;font-weight:700;letter-spacing:2px;padding:2px 6px;background:${rarityBadgeBg};color:${rarityBadgeColor};clip-path:polygon(3px 0,100% 0,calc(100% - 3px) 100%,0 100%)">${rarityLabel}</div>
+        <div style="position:absolute;top:8px;right:8px;font-family:var(--f1);font-size:10px;font-weight:900;color:${pc}">P${rankInDiv}</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:${teamColor}"></div>
+      </div>
+      <div style="padding:9px 11px;flex:1;display:flex;flex-direction:column;gap:7px">
+        <div>
+          <div style="font-family:var(--body);font-size:14px;font-weight:700;color:white">${dr.name}</div>
+          <div style="font-family:var(--f1);font-size:6px;color:var(--sub);letter-spacing:3px;margin-top:2px">${teamName} · ${divLabel}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:auto">
+          <div style="background:#0A0A0A;border:1px solid #111;padding:4px 3px;text-align:center">
+            <div style="font-family:var(--f1);font-size:12px;font-weight:900;color:#FFD700">${dr.wins||0}</div>
+            <div style="font-size:6px;color:var(--sub);letter-spacing:1px;margin-top:1px">WINS</div>
+          </div>
+          <div style="background:#0A0A0A;border:1px solid #111;padding:4px 3px;text-align:center">
+            <div style="font-family:var(--f1);font-size:12px;font-weight:900;color:#8B00FF">${dr.poles||0}</div>
+            <div style="font-size:6px;color:var(--sub);letter-spacing:1px;margin-top:1px">POLES</div>
+          </div>
+          <div style="background:#0A0A0A;border:1px solid #111;padding:4px 3px;text-align:center">
+            <div style="font-family:var(--f1);font-size:12px;font-weight:900;color:${pc}">${dr.pts}</div>
+            <div style="font-size:6px;color:var(--sub);letter-spacing:1px;margin-top:1px">PTS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-family:var(--f1);font-size:8px;letter-spacing:2px;color:var(--sub);text-align:center">CLICK ✏ TO EDIT PHOTO / STATS</div>
+  `;
+}
+
+// ════════════════════════════════════════════════
+// FANTASY ADMIN
+// ════════════════════════════════════════════════
+let FADMIN_USERS=[];
+function fantasyPtsAdmin(user){
+  const fp1dr=DB.fp1.drivers.find(d=>d.code===user.fp1Pick);
+  const fp2dr=DB.fp2.drivers.find(d=>d.code===user.fp2Pick);
+  return (fp1dr?.pts||0)+(fp2dr?.pts||0);
+}
+async function adminLoadFantasy(){
+  if(!FANTASY_ENABLED){
+    document.getElementById('fantasy-admin-tbody').innerHTML='<tr><td colspan="7" style="color:var(--sub);text-align:center;padding:20px">Set FANTASY_BIN_ID to enable.</td></tr>';
+    return;
+  }
+  document.getElementById('fantasy-admin-tbody').innerHTML='<tr><td colspan="7" style="color:var(--sub);text-align:center;padding:20px">Loading…</td></tr>';
+  try{
+    const res=await fetch(`https://api.jsonbin.io/v3/b/${FANTASY_BIN_ID}/latest`,{headers:{'X-Bin-Meta':false,'X-Master-Key':JSONBIN_KEY}});
+    if(res.ok){
+      const data=await res.json();
+      FADMIN_USERS=Array.isArray(data.users)?data.users:(data.users?Object.values(data.users):[]);
+    }
+  }catch(e){}
+  const sorted=[...FADMIN_USERS].map(u=>({...u,total:fantasyPtsAdmin(u)})).sort((a,b)=>b.total-a.total);
+  const tbody=document.getElementById('fantasy-admin-tbody');
+  tbody.innerHTML=sorted.length?sorted.map((u,i)=>{
+    const fp1dr=DB.fp1.drivers.find(d=>d.code===u.fp1Pick);
+    const fp2dr=DB.fp2.drivers.find(d=>d.code===u.fp2Pick);
+    return `<tr>
+      <td style="font-weight:900;color:var(--sub)">${i+1}</td>
+      <td style="font-weight:700">${u.username}</td>
+      <td>${fp1dr?fp1dr.name:'<span style="color:var(--sub)">Not picked</span>'}</td>
+      <td>${fp2dr?fp2dr.name:'<span style="color:var(--sub)">Not picked</span>'}</td>
+      <td style="font-family:var(--f1);color:var(--purple);font-weight:900">${u.total}</td>
+      <td style="color:var(--sub);font-size:11px">${u.createdAt?new Date(u.createdAt).toLocaleDateString('en-GB'):'-'}</td>
+      <td><button class="btn btn-sm" style="background:rgba(232,0,29,.12);color:var(--red);border:1px solid rgba(232,0,29,.2)" onclick="adminDeleteFantasyUser(${FADMIN_USERS.indexOf(u)})">Remove</button></td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="7" style="color:var(--sub);text-align:center;padding:20px">No users yet.</td></tr>';
+}
+async function adminDeleteFantasyUser(i){
+  if(!confirm('Remove this user?')) return;
+  FADMIN_USERS.splice(i,1);
+  await fetch(`https://api.jsonbin.io/v3/b/${FANTASY_BIN_ID}`,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+    body:JSON.stringify({users:FADMIN_USERS})
+  });
+  adminLoadFantasy();toast('User removed.');
+}
+
+// ════════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════════
+function renderSettings(){
+  const s=DB.settings;
+  document.getElementById('s-name').value=s.leagueName||'FP League';
+  document.getElementById('s-season').value=s.season||1;
+  document.getElementById('s-fp1').value=s.fp1Name||'FP 1';
+  document.getElementById('s-fp2').value=s.fp2Name||'FP 2';
+  document.getElementById('s-rounds').value=s.totalRounds||16;
+  document.getElementById('s-fantasy-budget').value=s.fantasyBudget||25;
+  document.getElementById('pts-config').innerHTML=DB.points.map((p,i)=>`
+    <div class="pts-config-row">
+      <div class="pts-pos-lbl">P${i+1}</div>
+      <input class="form-input pts-input" type="number" id="p-${i}" value="${p}" style="width:80px">
+      <div style="font-size:12px;color:var(--sub)">points</div>
+    </div>
+  `).join('')+'<div class="pts-config-row" style="background:rgba(139,0,255,.07);border-radius:6px;padding:8px;margin-top:8px"><div class="pts-pos-lbl" style="color:var(--purple)">FL</div><div style="font-size:12px;color:var(--purple)">+1 point (toggle per driver per race)</div></div>';
+}
+function saveSettings(){
+  DB.settings={leagueName:document.getElementById('s-name').value.trim(),season:parseInt(document.getElementById('s-season').value)||1,fp1Name:document.getElementById('s-fp1').value.trim(),fp2Name:document.getElementById('s-fp2').value.trim(),totalRounds:parseInt(document.getElementById('s-rounds').value)||16,fantasyBudget:parseInt(document.getElementById('s-fantasy-budget').value)||25};
+  saveAll();toast('Settings saved!');
+}
+function savePoints(){
+  DB.points=DB.points.map((_,i)=>parseInt(document.getElementById('p-'+i)?.value)||0);
+  saveAll();toast('Points system saved!');
+}
+
+// ════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════
+function updateRaw(){document.getElementById('raw-preview').value=JSON.stringify(DB,null,2);}
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fp-database.json';a.click();
+  toast('Database exported!');
+}
+function importJSON(input){
+  const file=input.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{try{DB=JSON.parse(e.target.result);['fp1','fp2'].forEach(d=>{if(!DB[d].transfers)DB[d].transfers=[];if(!DB[d].news)DB[d].news=[];});saveAll();renderPage(currentPage);toast('Imported successfully!');}catch{toast('Invalid JSON file.',true);}};
+  r.readAsText(file);
+}
+
+// ════════════════════════════════════════════════
+// SAVE
+// ════════════════════════════════════════════════
+function saveAll(){
+  // Always save locally as backup
+  localStorage.setItem('fpLeagueData',JSON.stringify(DB));
+  const n=new Date();
+  const timeStr=`${n.getHours()}:${String(n.getMinutes()).padStart(2,'0')}`;
+
+  if(JSONBIN_ENABLED){
+    document.getElementById('save-status').textContent='Saving…';
+    fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+      body:JSON.stringify(DB)
+    }).then(r=>{
+      if(r.ok) document.getElementById('save-status').textContent=`Live · ${timeStr}`;
+      else throw new Error(r.status);
+    }).catch(err=>{
+      document.getElementById('save-status').textContent='Save failed!';
+      console.error('JSONBin save error:',err);
+      toast('Save failed — check your JSONBin config.');
+    });
+  } else {
+    document.getElementById('save-status').textContent=`Saved locally ${timeStr}`;
+  }
+  if(currentPage==='data') updateRaw();
+}
+
+// ════════════════════════════════════════════════
+// MODAL HELPERS
+// ════════════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});
+
+function buildSwatches(prefix){
+  const cur=document.getElementById(prefix+'-color').value;
+  document.getElementById(prefix+'-swatches').innerHTML=COLORS.map(c=>`<div class="color-swatch ${c===cur?'selected':''}" style="background:${c}" onclick="selectColor('${prefix}','${c}',this)"></div>`).join('');
+}
+function selectColor(prefix,color,el){
+  document.getElementById(prefix+'-color').value=color;
+  document.querySelectorAll('#'+prefix+'-swatches .color-swatch').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected');
+  syncColor(prefix);
+}
+function syncColor(prefix){
+  const color=document.getElementById(prefix+'-color').value;
+  document.getElementById(prefix+'-color-preview').style.background=color;
+}
+
+// ════════════════════════════════════════════════
+// END OF SEASON
+// ════════════════════════════════════════════════
+async function triggerEndOfSeason(){
+  const btn=document.getElementById('eos-btn');
+  const status=document.getElementById('eos-status');
+  if(!confirm('⚠️ SEASON RESET\n\nThis will:\n1. Capture current standings as champions\n2. Broadcast a countdown animation to ALL live viewers\n3. Reset all driver & team stats to zero\n\nAre you absolutely sure?'))return;
+  btn.disabled=true;btn.style.opacity='.45';
+
+  const f1d=DB.fp1.drivers.slice().sort((a,b)=>b.pts-a.pts);
+  const f2d=DB.fp2.drivers.slice().sort((a,b)=>b.pts-a.pts);
+  const f1t=DB.fp1.teams.slice().sort((a,b)=>b.pts-a.pts);
+  const f2t=DB.fp2.teams.slice().sort((a,b)=>b.pts-a.pts);
+  const champions={
+    season:DB.settings.season||1,
+    fp1WDC:f1d[0]?{name:f1d[0].name,pts:f1d[0].pts,code:f1d[0].code}:null,
+    fp1WCC:f1t[0]?{name:f1t[0].name,pts:f1t[0].pts}:null,
+    fp2WDC:f2d[0]?{name:f2d[0].name,pts:f2d[0].pts,code:f2d[0].code}:null,
+    fp2WCC:f2t[0]?{name:f2t[0].name,pts:f2t[0].pts}:null
+  };
+
+  DB.settings.seasonResetAt=Date.now();
+  DB.settings.lastSeasonChampions=champions;
+  DB.settings.season=(DB.settings.season||1)+1;
+  status.textContent='BROADCASTING TO ALL DEVICES...';
+  await saveAllAsync();
+
+  for(let i=16;i>=1;i--){
+    status.textContent=`RESETTING DATA IN ${i}s...`;
+    await new Promise(r=>setTimeout(r,1000));
+  }
+
+  ['fp1','fp2'].forEach(div=>{
+    DB[div].drivers.forEach(d=>{d.pts=0;d.wins=0;d.poles=0;});
+    DB[div].teams.forEach(t=>{t.pts=0;t.wins=0;});
+    DB[div].results=[];
+    DB[div].schedule.forEach(r=>{r.status='upcoming';delete r.result;});
+  });
+  DB.settings.seasonResetAt=0;
+  status.textContent='SAVING RESET DATA...';
+  await saveAllAsync();
+
+  status.textContent='✅ NEW SEASON ACTIVE — ALL STATS RESET';
+  toast('New season started! All stats zeroed.');
+  btn.disabled=false;btn.style.opacity='';
+  renderPage(currentPage);
+}
+
+function saveAllAsync(){
+  return new Promise(resolve=>{
+    localStorage.setItem('fpLeagueData',JSON.stringify(DB));
+    if(!JSONBIN_ENABLED){resolve();return;}
+    fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+      body:JSON.stringify(DB)
+    }).then(()=>resolve()).catch(()=>resolve());
+  });
+}
+
+
+// ════════════════════════════════════════════════
+// GIVE CREDITS
+// ════════════════════════════════════════════════
+function openGiveCredits(username){
+  const user = FADMIN_USERS.find(u=>u.username===username);
+  if(!user) return;
+  document.getElementById('credits-username').value = username;
+  document.getElementById('credits-username-display').textContent = username;
+  document.getElementById('credits-current').textContent = (user.credits||0).toLocaleString() + ' Credits';
+  document.getElementById('credits-amount').value = 100;
+  openModal('modal-credits');
+}
+
+async function confirmGiveCredits(){
+  const username = document.getElementById('credits-username').value;
+  const amount = parseInt(document.getElementById('credits-amount').value)||0;
+  if(amount<=0){ toast('Enter a valid amount.','error'); return; }
+  const user = FADMIN_USERS.find(u=>u.username===username);
+  if(!user){ toast('User not found.','error'); return; }
+  user.credits = (user.credits||0) + amount;
+  try{
+    await fetch(`https://api.jsonbin.io/v3/b/${FANTASY_BIN_ID}`,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+      body:JSON.stringify({users:FADMIN_USERS})
+    });
+    closeModal('modal-credits');
+    adminLoadFantasy();
+    toast(`Gave ${amount} credits to ${username}!`);
+  }catch(e){
+    toast('Failed to save credits.','error');
+  }
+}
+
+// ════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════
+function toast(msg,isError=false){
+  const t=document.getElementById('toast');
+  t.textContent=(isError?'✗ ':'✓ ')+msg;
+  t.className='toast show'+(isError?' error':'');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+showGate();
+</script>
+</body>
+</html>

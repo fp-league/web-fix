@@ -1,0 +1,394 @@
+{
+  "settings": {
+    "leagueName": "FP League",
+    "season": 1,
+    "fp1Name": "FP 1",
+    "fp2Name": "FP 2",
+    "totalRounds": 16
+  },
+  "points": [25, 18, 15, 12, 10, 8, 6, 4, 2, 1],
+  "fp1": {
+    "teams": [
+      {
+        "name": "Team Name Here",
+        "color": "#E8001D",
+        "pts": 0,
+        "wins": 0
+      },
+      {
+        "name": "Team Name Here",
+        "color": "#FF6B00",
+        "pts": 0,
+        "wins": 0
+      },
+      {
+        "name": "Team Name Here",
+        "color": "#FFD700",
+        "pts": 0,
+        "wins": 0
+      },
+      {
+        "name": "Team Name Here",
+        "color": "#8B00FF",
+        "pts": 0,
+        "wins": 0
+      },
+      {
+        "name": "Team Name Here",
+        "color": "#0057FF",
+        "pts": 0,
+        "wins": 0
+      }
+    ],
+    "drivers": [
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 0,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 1
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 0,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 2
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 1,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 3
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 1,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 4
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 2,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 5
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 2,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 6
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 3,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 7
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 3,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 8
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 4,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 9
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 4,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 10
+      }
+    ],
+    "schedule": [
+      {
+        "round": 1,
+        "name": "Race Name GP",
+        "date": "2025-03-01",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 2,
+        "name": "Race Name Sprint",
+        "date": "2025-03-15",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 3,
+        "name": "Race Name 500",
+        "date": "2025-03-29",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 4,
+        "name": "Race Name GP",
+        "date": "2025-04-12",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 5,
+        "name": "Race Name Invitational",
+        "date": "2025-04-26",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 6,
+        "name": "Race Name Circuit",
+        "date": "2025-05-10",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 7,
+        "name": "Race Name GP",
+        "date": "2025-05-24",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 8,
+        "name": "Race Name Grand Prix",
+        "date": "2025-06-07",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      }
+    ]
+  },
+  "fp2": {
+    "teams": [
+      {
+        "name": "Team Name Here",
+        "color": "#00C853",
+        "pts": 0,
+        "wins": 0
+      },
+      {
+        "name": "Team Name Here",
+        "color": "#FF2D78",
+        "pts": 0,
+        "wins": 0
+      },
+      {
+        "name": "Team Name Here",
+        "color": "#8A8A8A",
+        "pts": 0,
+        "wins": 0
+      },
+      {
+        "name": "Team Name Here",
+        "color": "#00BFA5",
+        "pts": 0,
+        "wins": 0
+      },
+      {
+        "name": "Team Name Here",
+        "color": "#FF6B00",
+        "pts": 0,
+        "wins": 0
+      }
+    ],
+    "drivers": [
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 0,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 1
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 0,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 2
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 1,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 3
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 1,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 4
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 2,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 5
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 2,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 6
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 3,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 7
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 3,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 8
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 4,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 9
+      },
+      {
+        "name": "Driver Name",
+        "code": "DRV",
+        "team": 4,
+        "pts": 0,
+        "wins": 0,
+        "change": "eq",
+        "pos": 10
+      }
+    ],
+    "schedule": [
+      {
+        "round": 1,
+        "name": "Race Name GP",
+        "date": "2025-03-02",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 2,
+        "name": "Race Name Sprint",
+        "date": "2025-03-16",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 3,
+        "name": "Race Name 500",
+        "date": "2025-03-30",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 4,
+        "name": "Race Name GP",
+        "date": "2025-04-13",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 5,
+        "name": "Race Name Invitational",
+        "date": "2025-04-27",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 6,
+        "name": "Race Name Circuit",
+        "date": "2025-05-11",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 7,
+        "name": "Race Name GP",
+        "date": "2025-05-25",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      },
+      {
+        "round": 8,
+        "name": "Race Name Grand Prix",
+        "date": "2025-06-08",
+        "status": "upcoming",
+        "winner": null,
+        "time": null
+      }
+    ]
+  }
+}
