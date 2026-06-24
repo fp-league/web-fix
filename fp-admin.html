@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -562,7 +562,7 @@ function renderLiveRace(){document.querySelectorAll('.page').forEach(function(p)
       <button class="btn btn-secondary btn-sm" onclick="adminLoadFantasy()">↻ Refresh</button>
     </div>
     <table class="data-table">
-      <thead><tr><th>#</th><th>Username</th><th>FP1 Pick</th><th>FP2 Pick</th><th>Fantasy Pts</th><th>Credits</th><th>Cards</th><th>Actions</th></tr></thead>
+      <thead><tr><th>#</th><th>Username</th><th>FP1 Pick</th><th>FP2 Pick</th><th>Fantasy Pts</th><th>Credits</th><th>Cards</th><th>Joined</th><th>Actions</th></tr></thead>
       <tbody id="fantasy-admin-tbody"></tbody>
     </table>
   </div>
@@ -1935,16 +1935,23 @@ async function adminLoadFantasy(){
   tbody.innerHTML=sorted.length?sorted.map((u,i)=>{
     const fp1dr=DB.fp1.drivers.find(d=>d.code===u.fp1Pick);
     const fp2dr=DB.fp2.drivers.find(d=>d.code===u.fp2Pick);
+    const credits=u.credits||0;
+    const cards=(u.cardCollection||[]).length;
     return `<tr>
       <td style="font-weight:900;color:var(--sub)">${i+1}</td>
       <td style="font-weight:700">${u.username}</td>
       <td>${fp1dr?fp1dr.name:'<span style="color:var(--sub)">Not picked</span>'}</td>
       <td>${fp2dr?fp2dr.name:'<span style="color:var(--sub)">Not picked</span>'}</td>
       <td style="font-family:var(--f1);color:var(--purple);font-weight:900">${u.total}</td>
+      <td style="font-family:var(--f1);font-weight:900;color:#FFD700">${credits.toLocaleString()}</td>
+      <td style="color:var(--sub)">${cards}</td>
       <td style="color:var(--sub);font-size:11px">${u.createdAt?new Date(u.createdAt).toLocaleDateString('en-GB'):'-'}</td>
-      <td><button class="btn btn-sm" style="background:rgba(232,0,29,.12);color:var(--red);border:1px solid rgba(232,0,29,.2)" onclick="adminDeleteFantasyUser(${FADMIN_USERS.indexOf(u)})">Remove</button></td>
+      <td>
+        <button class="btn btn-success btn-sm" onclick="openGiveCredits('${u.username}')">+ Credits</button>
+        <button class="btn btn-sm" style="background:rgba(232,0,29,.12);color:var(--red);border:1px solid rgba(232,0,29,.2)" onclick="adminDeleteFantasyUser(${FADMIN_USERS.indexOf(u)})">Remove</button>
+      </td>
     </tr>`;
-  }).join(''):'<tr><td colspan="7" style="color:var(--sub);text-align:center;padding:20px">No users yet.</td></tr>';
+  }).join(''):'<tr><td colspan="8" style="color:var(--sub);text-align:center;padding:20px">No users yet.</td></tr>';
 }
 async function adminDeleteFantasyUser(i){
   if(!confirm('Remove this user?')) return;
